@@ -1,10 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin page</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Admin Page</title>
+
+
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet">
+
+          <style>
+            .row {
+            display: flex;
+            }
+
+            .column {
+            flex: 25%;
+            }
+          </style>
 </head>
 <body>
-    <h1> Hello, Admin!</h1>
+
+
+<div align="center" class="row">
+
+    <div class="column"></div>
+
+    <div class="column">
+            <h3>Edit Accounts</h3>
+                <form action="#" th:action="@{/delete}" th:object="${customers}" method="post">
+                    <table class="table table-striped" border="1" width="30%">
+                        <th:block th:each="customer : ${customers}">
+                            <tr>
+                                <td><input type="checkbox"  name="toDelete" th:value="${customer.id}" th:id="'check_' + ${customer.id}"></td>
+                                <td th:text ="${customer.login}">...</td>
+                                <td th:text ="${customer.role}">...</td>
+                                <td> <a th:href="@{'/update/' + ${customer.login}}">Edit</a> </td>
+                            </tr>
+                        </th:block>
+                    </table>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label"></label>
+                        <div class="col-md-8">
+                            <a class="btn btn-primary" href="/register" role="button">Add User</a>
+                            <button type="submit" id="delete_customer" name="delete_customer" class="btn btn-primary">Delete Users</button>
+                            <a class="btn btn-primary" href="/home" role="button">Home Page</a>
+                        </div>
+                    </div>
+
+                </form>
+
+        </div>
+
+    <div class="column">
+        <h3>Edit Admins Payment categories</h3>
+        <form action="#" th:action="@{/deleteCategory}" th:object="${paymentCategories}" method="post">
+            <table class="table table-striped" border="1" width="30%">
+                <th:block th:each="paymentCategory : ${paymentCategories}">
+                    <tr>
+                        <td><input type="checkbox"  name="toDelete" th:value="${paymentCategory.id}" th:id="'check_' + ${paymentCategory.id}"></td>
+                        <td th:text ="${paymentCategory.name}">...</td>
+                        <td th:text ="${paymentCategory.description}">...</td>
+                        <td> <a th:href="@{'/updateCategory/' + ${paymentCategory.id}}">Edit</a> </td>
+                    </tr>
+                </th:block>
+            </table>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label"></label>
+                <div class="col-md-8">
+                    <a class="btn btn-primary" href="/addNewCategory" role="button">New Category</a>
+                    <button type="submit" id="delete_category" name="delete_category" class="btn btn-primary">Delete Categories</button>
+                    <a class="btn btn-primary" href="/home" role="button">Home Page</a>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="column"></div>
+
+
+    <script crossorigin="anonymous"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+</div>
 </body>
 </html>

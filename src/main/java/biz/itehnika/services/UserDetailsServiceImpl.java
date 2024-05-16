@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -26,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (customer == null)
             throw new UsernameNotFoundException(login + " not found");
 
-        List<GrantedAuthority> roles = Arrays.asList(
+        List<GrantedAuthority> roles = List.of(
                 new SimpleGrantedAuthority(customer.getRole().toString())
         );
 

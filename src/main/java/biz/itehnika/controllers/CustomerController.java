@@ -1,8 +1,10 @@
 package biz.itehnika.controllers;
 
+import biz.itehnika.config.AppConfig;
 import biz.itehnika.model.Customer;
 import biz.itehnika.model.CustomerRole;
 import biz.itehnika.services.CustomerService;
+import biz.itehnika.services.PaymentCategoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,19 +24,18 @@ import java.util.List;
 public class CustomerController {
     private final CustomerService customerService;
     private final PasswordEncoder passwordEncoder;
+    private final PaymentCategoryService paymentCategoryService;
 
-    public CustomerController(CustomerService customerService, PasswordEncoder passwordEncoder) {
+    public CustomerController(CustomerService customerService, PasswordEncoder passwordEncoder, PaymentCategoryService paymentCategoryService) {
         this.customerService = customerService;
         this.passwordEncoder = passwordEncoder;
+        this.paymentCategoryService = paymentCategoryService;
     }
 
     @GetMapping("/home")
     public String home(Model model) {
         User user = getCurrentUser();
-
         String login = user.getUsername();
-        Customer dbUser = customerService.findByLogin(login);
-
         model.addAttribute("login", login);
         model.addAttribute("roles", user.getAuthorities());
         model.addAttribute("admin", isAdmin(user));
@@ -87,19 +88,45 @@ public class CustomerController {
         return "update";
     }
 
-    @PostMapping(value = "/updateForAdmin") // TODO - it may not be necessary
+    @GetMapping(value = "/update/{login}")     // TODO - update any users from admin page
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // SpEL !!!
+    public String updateForAdmin (@PathVariable(value = "login") String login, Model model) {
+        Customer customer = customerService.findByLogin(login);
+        model.addAttribute("login", login);
+        model.addAttribute("email", customer.getEmail());
+        model.addAttribute("phone", customer.getPhone());
+        model.addAttribute("address", customer.getAddress());
+
+        return "/updateForAdmin";
+    }
+
+    @PostMapping(value = "/updateForAdmin")     // TODO - update any users from admin page
     @PreAuthorize("hasRole('ROLE_ADMIN')") // SpEL !!!
     public String updateForAdmin(@RequestParam String login,
                                  @RequestParam String email,
                                  @RequestParam(required = false) String phone,
-                                 @RequestParam(required = false) String address) {
+                                 @RequestParam(required = false) String address,
+                                 Model model) {
 
         Customer customer = customerService.findByLogin(login);
-
         if (customer != null){
-            customerService.updateCustomer(login, email, phone, address);
+
+            if ( ! customerService.updateCustomer(login, email, phone, address)) {
+                model.addAttribute("exists", true);
+                model.addAttribute("login", login);
+                model.addAttribute("email", customer.getEmail());
+                model.addAttribute("phone", customer.getPhone());
+                model.addAttribute("address", customer.getAddress());
+            }else {
+                model.addAttribute("updated", true);
+                model.addAttribute("login", login);
+                model.addAttribute("email", email);
+                model.addAttribute("phone", phone);
+                model.addAttribute("address", address);
+            }
+
         }
-        return "redirect:/admin";
+        return "/updateForAdmin";
     }
 
     @PostMapping(value = "/register")
@@ -119,16 +146,26 @@ public class CustomerController {
         }
         model.addAttribute("registered", true);
         model.addAttribute("login", login);
-        return "login";
+        try {
+            User user = getCurrentUser();
+            if (user != null && isAdmin(user)){
+                return "redirect:/admin";
+            }
+            return "home";
+        }catch (Exception e){
+            return "login";
+        }
     }
 
     @PostMapping(value = "/delete")     // TODO - ADMIN role required
-    public String deleteCustomers(@RequestParam(name = "toDelete[]", required = false) List<Long> ids,
-                                  Model model) {
-        customerService.deleteCustomers(ids);
-        model.addAttribute("customer", customerService.getAllCustomers());
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // SpEL !!!
+    public String deleteCustomers(@RequestParam(name = "toDelete", required = false) List<Long> ids, Model model) {
+        if (ids != null && !ids.isEmpty()) {
+            customerService.deleteCustomers(ids);
+        }
+        model.addAttribute("customers", customerService.getAllCustomers());
 
-        return "admin";
+        return "redirect:/admin";
     }
 
     @GetMapping("/login")
@@ -144,21 +181,12 @@ public class CustomerController {
     @GetMapping("/admin")   // TODO - it must send all the data needed to edit into admin page
     @PreAuthorize("hasRole('ROLE_ADMIN')") // SpEL !!!
     public String admin(Model model) {
+        Customer customerAdmin = customerService.findByLogin(AppConfig.ADMIN_LOGIN);
         model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(customerAdmin));
         return "admin";
     }
 
-    @GetMapping(value = "/update/{login}")     // TODO - update any users from admin page
-    @PreAuthorize("hasRole('ROLE_ADMIN')") // SpEL !!!
-    public String update (@PathVariable(value = "login") String login, Model model) {
-        Customer customer = customerService.findByLogin(login);
-        model.addAttribute("login", login);
-        model.addAttribute("email", customer.getEmail());
-        model.addAttribute("phone", customer.getPhone());
-        model.addAttribute("address", customer.getAddress());
-
-        return "updateForAdmin";
-    }
 
     @GetMapping("/unauthorized")
     public String unauthorized(Model model) {
@@ -169,15 +197,15 @@ public class CustomerController {
 
     // ----
 
-    private User getCurrentUser() {
+    static User getCurrentUser() {
         return (User)SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal();
     }
 
-    private boolean isAdmin(User user) {
-        Collection<GrantedAuthority> roles = (Collection<GrantedAuthority>) user.getAuthorities();
+    static boolean isAdmin(User user) {
+        Collection<GrantedAuthority> roles = user.getAuthorities();
 
         for (GrantedAuthority auth : roles) {
             if ("ROLE_ADMIN".equals(auth.getAuthority()))
@@ -185,5 +213,21 @@ public class CustomerController {
         }
         return false;
     }
+
+
+//    @PostMapping(value = "/updateForAdmin") // TODO - it may not be necessary
+//    @PreAuthorize("hasRole('ROLE_ADMIN')") // SpEL !!!
+//    public String updateForAdmin(@RequestParam String login,
+//                                 @RequestParam String email,
+//                                 @RequestParam(required = false) String phone,
+//                                 @RequestParam(required = false) String address) {
+//
+//        Customer customer = customerService.findByLogin(login);
+//
+//        if (customer != null){
+//            customerService.updateCustomer(login, email, phone, address);
+//        }
+//        return "redirect:/admin";
+//    }
 
 }

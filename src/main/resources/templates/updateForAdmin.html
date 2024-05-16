@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+>
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -22,28 +23,19 @@
             <h3>Account updated...</h3>
         </div>
     </div>
-    <h3><td th:text="'Your role is: ' + ${roles}">Role</td></h3>
 
-    <form class="form-horizontal" th:action="@{/update}" method="POST">
+    <form class="form-horizontal" th:action="@{/updateForAdmin}" method="POST">
         <fieldset>
-
-            <legend>You can change your data:</legend>
-
+            <legend th:inline="text">Account name is: <b><span th:text="${login}">thymeleaf</span></b></legend>
             <div class="form-group">
                 <div class="col-md-4">
+                    <input id="login" name="login" type="text" placeholder="Login" class="form-control input-md" required="" th:value="${login}" readonly>
                     <input id="email" name="email" type="email" placeholder="E-mail" class="form-control input-md" required="" th:value="${email}">
                     <input id="phone" name="phone" type="tel" pattern="[0-9]{9-13}" placeholder="Mobile phone" class="form-control input-md" th:value="${phone}">
                     <input id="address" name="address" type="text" placeholder="Address" class="form-control input-md" th:value="${address}">
+                    <button type="submit" id="updateForAdmin" name="updateForAdmin" class="btn btn-success">Update</button>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="update"></label>
-                <div class="col-md-8">
-                    <button type="submit" id="update" name="update" class="btn btn-success">Update account</button>
-                </div>
-            </div>
-
         </fieldset>
     </form>
 
@@ -51,7 +43,7 @@
         <label class="col-md-4 control-label"></label>
         <div class="col-md-8">
             <button class="btn btn-primary" id="back" name="back" onclick="history.back()">Backward</button>
-            <a class="btn btn-primary" href="/home" role="button">Home Page</a>
+            <a class="btn btn-primary" href="/admin" role="button">Admin Page</a>
         </div>
     </div>
 

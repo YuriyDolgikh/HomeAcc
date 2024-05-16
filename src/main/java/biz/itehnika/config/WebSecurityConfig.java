@@ -4,12 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -26,7 +22,9 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers( "/admin", "/admin/**").hasRole("ADMIN")
-                        .requestMatchers( "/update", "/home").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers( "/update",
+                                          "/home",
+                                          "/addNewCategory").hasAnyRole("USER", "ADMIN")
                         .requestMatchers( "/register").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -39,7 +37,8 @@ public class WebSecurityConfig {
                                 .failureUrl("/login?error")
                                 .usernameParameter("j_login")
                                 .passwordParameter("j_password")
-                        .defaultSuccessUrl("/home")
+                        .successForwardUrl("/home")
+                        .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
                 .logout((logout) -> logout

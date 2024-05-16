@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -24,6 +26,9 @@ public class Customer {
     private String phone;
     private String address;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private List<PaymentCategory> paymentCategories = new ArrayList<>();
+
     public Customer(String login, String password, CustomerRole role,
                     String email, String phone, String address) {
         this.login = login;
@@ -33,4 +38,5 @@ public class Customer {
         this.phone = phone;
         this.address = address;
     }
+
 }

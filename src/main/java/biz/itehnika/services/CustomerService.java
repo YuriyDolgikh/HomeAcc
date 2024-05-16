@@ -57,24 +57,17 @@ public class CustomerService {
     @Transactional
     public boolean updateCustomer(String login, String email, String phone, String address) {
         Customer customerToUpdate = customerRepository.findCustomerByLogin(login);
-
         if (customerRepository.existsCustomerByEmail(email)){
-
             Customer customerToCheck = customerRepository.findCustomerByEmail(email);
             if (!customerToUpdate.getLogin().equals(customerToCheck.getLogin())){
                 return false;
             }
         }
-
         customerToUpdate.setEmail(email);
         customerToUpdate.setPhone(phone);
         customerToUpdate.setAddress(address);
-
         customerRepository.save(customerToUpdate);
         return true;
     }
 
-    public boolean existCustomerByLogin(String login) {
-        return customerRepository.existsCustomerByLogin(login);
-    }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
     <head>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -19,68 +19,33 @@
 
     <form class="form-horizontal" th:action="@{/register}" method="POST">
         <fieldset>
-
-        <!-- Form Name -->
         <legend>Register new account</legend>
-
-        <!-- Login input-->
+        <!--Input-->
         <div class="form-group">
             <div class="col-md-4">
                 <input id="login" name="login" type="text" placeholder="Username / login" class="form-control input-md" required="" th:value="${login}">
-            </div>
-        </div>
-
-        <!-- E-mail input-->
-        <div class="form-group">
-            <div class="col-md-4">
                 <input id="email" name="email" type="email" placeholder="E-mail" class="form-control input-md" required="" th:value="${email}">
-            </div>
-        </div>
-
-        <!-- Password input-->
-        <div class="form-group">
-            <div class="col-md-4">
                 <input id="password" name="password" type="password" placeholder="Password" class="form-control input-md" required="">
-            </div>
-        </div>
-
-        <!-- Repeat Password input-->
-        <!-- <div class="form-group">
-            <label class="col-md-4 control-label" for="password_check">Repeat Password</label>
-            <div class="col-md-4">
-                <input id="password_check" name="password_check" type="password" placeholder="" class="form-control input-md" required="">
-            </div>
-        </div> -->
-
-        <!-- Phone input-->
-        <div class="form-group">
-            <div class="col-md-4">
+<!--                <input id="password_check" name="password_check" type="password" placeholder="" class="form-control input-md" required="">-->
                 <input id="phone" name="phone" type="text" placeholder="Mobile phone" class="form-control input-md" th:value="${phone}">
-            </div>
-        </div>
-
-        <!-- Address input-->
-        <div class="form-group">
-            <div class="col-md-4">
                 <input id="address" name="address" type="text" placeholder="Address" class="form-control input-md" th:value="${address}">
             </div>
         </div>
-
-        <!-- Button (Double) -->
+        <!-- Button -->
         <div class="form-group">
             <label class="col-md-4 control-label" for="register"></label>
             <div class="col-md-8">
                 <button type="submit" id="register" name="register" class="btn btn-success">Create new account</button>
             </div>
         </div>
-
         </fieldset>
     </form>
 
     <div class="form-group">
         <label class="col-md-4 control-label" for="register"></label>
         <div class="col-md-8">
-            <td><a class="btn btn-danger" href="/login" role="button">Cancel</a></td>
+            <button class="btn btn-primary" id="back" name="back" onclick="history.back()">Backward</button>
+            <a class="btn btn-primary" href="/home" role="button">Home Page</a>
         </div>
     </div>
 
