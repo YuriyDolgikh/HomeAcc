@@ -6,7 +6,6 @@ import biz.itehnika.services.CustomerService;
 import biz.itehnika.services.PaymentCategoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,17 +47,14 @@ public class PaymentCategoryController {
         }
         model.addAttribute("added", true);
         model.addAttribute("name", name);
-        try {
-            if (user != null && CustomerController.isAdmin(user)){
-                return "redirect:/admin";
-            }
-            return "home";
-        }catch (Exception e){
-            return "login";
+
+        if (CustomerController.isAdmin(user)){
+            return "redirect:/admin";
         }
+        return "redirect:/settings";
     }
 
-    @PostMapping(value = "/deleteCategory")     // TODO - ADMIN role required
+    @PostMapping(value = "/deleteCategory")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')") // SpEL !!!
     public String deleteCategory(@RequestParam(name = "toDelete", required = false) List<Long> ids, Model model) {
         if (ids != null && !ids.isEmpty()) {
@@ -68,14 +64,16 @@ public class PaymentCategoryController {
         Customer customer = customerService.findByLogin(user.getUsername());
         model.addAttribute("categories", paymentCategoryService.getPaymentCategoriesByCustomer(customer));
 
-        return "redirect:/admin";
+        if (CustomerController.isAdmin(user)){
+            return "redirect:/admin";
+        }
+        return "redirect:/settings";
     }
 
     @GetMapping("/updateCategory/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')") // SpEL !!!
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public String updateCategory(@PathVariable(value = "id") Long id, Model model) {
 
-        User user = CustomerController.getCurrentUser();
         PaymentCategory paymentCategory = paymentCategoryService.getById(id);
 
         model.addAttribute("name", paymentCategory.getName());
@@ -86,10 +84,10 @@ public class PaymentCategoryController {
 
     @PostMapping(value = "/updateCategory")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')") // SpEL !!!
-    public String updateCategory(@RequestParam()  Long id,
-                                   @RequestParam(required = false) String name,
-                                   @RequestParam(required = false) String description,
-                                   Model model) {
+    public String updateCategory(@RequestParam() Long id,
+                                 @RequestParam() String name,
+                                 @RequestParam(required = false) String description,
+                                 Model model) {
         User user = CustomerController.getCurrentUser();
         Customer customer = customerService.findByLogin(user.getUsername());
         PaymentCategory paymentCategory = paymentCategoryService.getById(id);

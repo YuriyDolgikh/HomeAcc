@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface PaymentCategoryRepository extends JpaRepository<PaymentCategory, Long> {
 
-    PaymentCategory findPaymentCategoryByName(String name);
     PaymentCategory findPaymentCategoryByNameAndCustomer(String name, Customer customer);
 
     boolean existsPaymentCategoryByNameAndCustomer(String name, Customer customer);

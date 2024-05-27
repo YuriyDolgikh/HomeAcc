@@ -1,4 +1,4 @@
-package biz.itehnika.model;
+package biz.itehnika.model.enums;
 
 public enum CustomerRole {
     ADMIN, USER;

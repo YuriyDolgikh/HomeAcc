@@ -2,7 +2,7 @@ package biz.itehnika.services;
 
 import biz.itehnika.dto.CurrencyDTO;
 import biz.itehnika.model.Currency;
-import biz.itehnika.model.CurrencyName;
+import biz.itehnika.model.enums.CurrencyName;
 import biz.itehnika.repos.CurrencyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -28,13 +28,13 @@ public class PaymentCategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<PaymentCategory> getPaymentCategoriesByCustomer(Customer customer){     //Get all category
+    public List<PaymentCategory> getPaymentCategoriesByCustomer(Customer customer){
         return paymentCategoryRepository.findPaymentCategoriesByCustomer(customer);
     }
 
     @Transactional
     public PaymentCategory getById(Long id){
-        return paymentCategoryRepository.findById(id).get(); // because <Optional>
+        return paymentCategoryRepository.findById(id).orElseThrow(); // because <Optional>
     }
 
     @Transactional
@@ -60,8 +60,8 @@ public class PaymentCategoryService {
     @Transactional
     public void deletePaymentCategories(List<Long> ids) {
         ids.forEach(id -> {
-            Optional<PaymentCategory> paymentCategories = paymentCategoryRepository.findById(id);
-            paymentCategories.ifPresent(u -> paymentCategoryRepository.deleteById(u.getId()));
+            Optional<PaymentCategory> paymentCategory = paymentCategoryRepository.findById(id);
+            paymentCategory.ifPresent(u -> paymentCategoryRepository.deleteById(u.getId()));
         });
     }
 
@@ -69,7 +69,7 @@ public class PaymentCategoryService {
     public boolean updatePaymentCategory(Long id, String newName, String newDescription, Customer customer) {
         PaymentCategory paymentCategoryToUpdate = getById(id);
         PaymentCategory paymentCategoryToCheck = getByNameAndCustomer(newName, customer);
-        if (paymentCategoryToCheck != null ){
+        if (paymentCategoryToCheck != null && !paymentCategoryToCheck.getId().equals(id) ){
             return false;
         }
         paymentCategoryToUpdate.setName(newName);

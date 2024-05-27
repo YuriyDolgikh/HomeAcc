@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -19,12 +21,15 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers( "/admin", "/admin/**").hasRole("ADMIN")
-                        .requestMatchers( "/update",
+                        .requestMatchers( "/settings",
                                           "/home",
-                                          "/addNewCategory").hasAnyRole("USER", "ADMIN")
+                                          "/addNewCategory",
+                                          "/addNewAccount").hasAnyRole("USER", "ADMIN")
                         .requestMatchers( "/register").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -42,7 +47,8 @@ public class WebSecurityConfig {
                         .permitAll()
                 )
                 .logout((logout) -> logout
-                        .deleteCookies("JSESSIONID","remember-me")
+                        .logoutUrl("/perform_logout")
+                        .deleteCookies("JSESSIONID", "XSRF-TOKEN", "remember-me")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
                         .permitAll());

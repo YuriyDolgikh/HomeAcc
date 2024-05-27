@@ -2,7 +2,7 @@ package biz.itehnika.services;
 
 import biz.itehnika.config.AppConfig;
 import biz.itehnika.model.Customer;
-import biz.itehnika.model.CustomerRole;
+import biz.itehnika.model.enums.CustomerRole;
 import biz.itehnika.repos.CustomerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +13,11 @@ import java.util.Optional;
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final PaymentCategoryService paymentCategoryService;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, PaymentCategoryService paymentCategoryService) {
         this.customerRepository = customerRepository;
+        this.paymentCategoryService = paymentCategoryService;
     }
 
     @Transactional(readOnly = true)
@@ -50,6 +52,7 @@ public class CustomerService {
 
         Customer customer = new Customer(login, passHash, role, email, phone, address);
         customerRepository.save(customer);
+        paymentCategoryService.initPaymentCategoriesForCustomer(findByLogin(login));
 
         return true;
     }

@@ -2,7 +2,8 @@ package biz.itehnika.controllers;
 
 import biz.itehnika.config.AppConfig;
 import biz.itehnika.model.Customer;
-import biz.itehnika.model.CustomerRole;
+import biz.itehnika.model.enums.CustomerRole;
+import biz.itehnika.services.AccountService;
 import biz.itehnika.services.CustomerService;
 import biz.itehnika.services.PaymentCategoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,11 +26,13 @@ public class CustomerController {
     private final CustomerService customerService;
     private final PasswordEncoder passwordEncoder;
     private final PaymentCategoryService paymentCategoryService;
+    private final AccountService accountService;
 
-    public CustomerController(CustomerService customerService, PasswordEncoder passwordEncoder, PaymentCategoryService paymentCategoryService) {
+    public CustomerController(CustomerService customerService, PasswordEncoder passwordEncoder, PaymentCategoryService paymentCategoryService, AccountService accountService) {
         this.customerService = customerService;
         this.passwordEncoder = passwordEncoder;
         this.paymentCategoryService = paymentCategoryService;
+        this.accountService = accountService;
     }
 
     @GetMapping("/home")
@@ -44,8 +47,8 @@ public class CustomerController {
     }
 
 
-    @GetMapping("/update")
-    public String update(Model model) {
+    @GetMapping("/settings")
+    public String updateCustomer(Model model) {
         User user = getCurrentUser();
 
         String login = user.getUsername();
@@ -57,13 +60,15 @@ public class CustomerController {
         model.addAttribute("email", dbUser.getEmail());
         model.addAttribute("phone", dbUser.getPhone());
         model.addAttribute("address", dbUser.getAddress());
+        model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(dbUser));
+        model.addAttribute("accounts", accountService.getAccountsByCustomer(dbUser));
 
-        return "update";
+        return "settings";
     }
 
-    @PostMapping(value = "/update")
+    @PostMapping(value = "/settings")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')") // SpEL !!!
-    public String update(@RequestParam(required = false) String email,
+    public String updateCustomer(@RequestParam(required = false) String email,
                          @RequestParam(required = false) String phone,
                          @RequestParam(required = false) String address,
                          Model model) {
@@ -85,7 +90,7 @@ public class CustomerController {
             model.addAttribute("updated", true);
         }
         model.addAttribute("email", dbUser.getEmail());
-        return "update";
+        return "settings";
     }
 
     @GetMapping(value = "/update/{login}")     // TODO - update any users from admin page
@@ -146,12 +151,13 @@ public class CustomerController {
         }
         model.addAttribute("registered", true);
         model.addAttribute("login", login);
+
         try {
             User user = getCurrentUser();
-            if (user != null && isAdmin(user)){
+            if (user != null && isAdmin(user)){     // TODO - try-catch is strange here / need to review
                 return "redirect:/admin";
             }
-            return "home";
+            return "login";
         }catch (Exception e){
             return "login";
         }
@@ -213,21 +219,5 @@ public class CustomerController {
         }
         return false;
     }
-
-
-//    @PostMapping(value = "/updateForAdmin") // TODO - it may not be necessary
-//    @PreAuthorize("hasRole('ROLE_ADMIN')") // SpEL !!!
-//    public String updateForAdmin(@RequestParam String login,
-//                                 @RequestParam String email,
-//                                 @RequestParam(required = false) String phone,
-//                                 @RequestParam(required = false) String address) {
-//
-//        Customer customer = customerService.findByLogin(login);
-//
-//        if (customer != null){
-//            customerService.updateCustomer(login, email, phone, address);
-//        }
-//        return "redirect:/admin";
-//    }
 
 }

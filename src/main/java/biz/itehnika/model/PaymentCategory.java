@@ -2,21 +2,21 @@ package biz.itehnika.model;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@ToString
 public class PaymentCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
+    private String name;       //TODO - will be Not null
     private String description;
 
     @ManyToOne

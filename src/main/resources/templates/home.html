@@ -26,9 +26,11 @@
                     <td th:if="${admin}">
                         <a class="btn btn-danger" href="/admin" role="button">ADMIN</a>
                     </td>
-                    <a class="btn btn-primary" href="/accounting" role="button">Accounting</a>
-                    <a class="btn btn-primary" href="/todo" role="button">To-Do List</a>
-                    <a class="btn btn-primary" href="/update" role="button">Settings</a>
+                    <td th:unless="${admin}">
+                        <a class="btn btn-primary" href="/accounting" role="button">Accounting</a>
+                        <a class="btn btn-primary" href="/todo" role="button">To-Do List</a>
+                        <a class="btn btn-primary" href="/settings" role="button">Settings</a>
+                    </td>
                     <a class="btn btn-primary" href="/login?logout" role="button">Sign Out</a>
                 </div>
             </div>

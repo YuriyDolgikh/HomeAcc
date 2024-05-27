@@ -1,6 +1,6 @@
 package biz.itehnika.dto;
 
-import biz.itehnika.model.CustomerRole;
+import biz.itehnika.model.enums.CustomerRole;
 import lombok.Getter;
 
 @Getter

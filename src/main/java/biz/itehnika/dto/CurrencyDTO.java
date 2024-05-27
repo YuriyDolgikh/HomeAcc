@@ -1,7 +1,7 @@
 package biz.itehnika.dto;
 
 import biz.itehnika.model.Currency;
-import biz.itehnika.model.CurrencyName;
+import biz.itehnika.model.enums.CurrencyName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
