@@ -2,10 +2,8 @@ package biz.itehnika.controllers;
 
 import biz.itehnika.model.Account;
 import biz.itehnika.model.Customer;
-import biz.itehnika.model.PaymentCategory;
 import biz.itehnika.model.enums.AccountType;
 import biz.itehnika.model.enums.CurrencyName;
-import biz.itehnika.model.enums.CustomerRole;
 import biz.itehnika.services.AccountService;
 import biz.itehnika.services.CurrencyService;
 import biz.itehnika.services.CustomerService;

@@ -29,6 +29,8 @@ public class WebSecurityConfig {
                         .requestMatchers( "/settings",
                                           "/home",
                                           "/addNewCategory",
+                                          "/addNewPayment",
+                                          "/accounting",
                                           "/addNewAccount").hasAnyRole("USER", "ADMIN")
                         .requestMatchers( "/register").permitAll()
                         .anyRequest().authenticated()

@@ -26,7 +26,6 @@
                     <input id="name" name="name" type="text" placeholder="Account name" class="form-control input-md" required="" th:value="${name}">
                     <input id="description" name="description" type="text" placeholder="Account description" class="form-control input-md" th:value="${description}">
                     <select class="selectpicker form-control form-group" name="type"  th:required="required">
-<!--                        <option selected>Select type of account</option>-->
                         <option value="">Select type of account</option>
                         <div th:each="type: ${accountTypes}">
                             <option th:value="${type}" th:text="${type}"></option>

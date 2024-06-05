@@ -47,13 +47,6 @@ public class CurrencyService {
     }
 
 
-
-
-
-
-
-
-
     public static List<CurrencyDTO> getTodayRatesFromBank(){
         final RestTemplate restTemplate = new RestTemplate();
         CurrencyDTO[] ratesArray = restTemplate.getForObject("https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11", CurrencyDTO[].class);

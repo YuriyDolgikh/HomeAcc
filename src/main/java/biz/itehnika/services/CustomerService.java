@@ -4,20 +4,26 @@ import biz.itehnika.config.AppConfig;
 import biz.itehnika.model.Customer;
 import biz.itehnika.model.enums.CustomerRole;
 import biz.itehnika.repos.CustomerRepository;
+import biz.itehnika.repos.PaymentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final PaymentCategoryService paymentCategoryService;
+    private final PaymentRepository paymentRepository;
 
-    public CustomerService(CustomerRepository customerRepository, PaymentCategoryService paymentCategoryService) {
+    public CustomerService(CustomerRepository customerRepository, PaymentCategoryService paymentCategoryService, PaymentRepository paymentRepository) {
         this.customerRepository = customerRepository;
         this.paymentCategoryService = paymentCategoryService;
+        this.paymentRepository = paymentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -51,6 +57,7 @@ public class CustomerService {
             return false;
 
         Customer customer = new Customer(login, passHash, role, email, phone, address);
+        customer.setFilters(true, true, true, true, true, true, true);
         customerRepository.save(customer);
         paymentCategoryService.initPaymentCategoriesForCustomer(findByLogin(login));
 
@@ -71,6 +78,71 @@ public class CustomerService {
         customerToUpdate.setAddress(address);
         customerRepository.save(customerToUpdate);
         return true;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, LocalDate> getWorkPeriod(Long customerId){
+        Customer customer = customerRepository.findById(customerId).orElseThrow();
+        Map<String, LocalDate> period = new HashMap<>();
+        LocalDate startDate = customer.getStartDate();
+        LocalDate endDate = customer.getEndDate();
+        if (startDate == null) {
+            startDate = LocalDate.now();
+        }
+        if (endDate == null) {
+            endDate = LocalDate.now();
+        }
+        period.put("startDate", startDate);
+        period.put("endDate", endDate);
+        return period;
+    }
+
+    @Transactional
+    public void setWorkPeriod(Long customerId, LocalDate startDate, LocalDate endDate){
+        Customer customer = customerRepository.findById(customerId).orElseThrow();
+        if (startDate == null) {
+            startDate = LocalDate.now();
+        }
+        if (endDate == null) {
+            endDate = LocalDate.now();
+        }
+        customer.setStartDate(startDate);
+        customer.setEndDate(endDate);
+        customerRepository.save(customer);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Boolean> getFilters(Long customerId){
+        Customer customer = customerRepository.findById(customerId).orElseThrow();
+        Map<String, Boolean> filters = customer.getFilters();
+        return filters;
+    }
+
+    @Transactional
+    public void setFilter(Long customerId, Map<String, Boolean> filters){
+        Customer customer = customerRepository.findById(customerId).orElseThrow();
+        customer.setFilters(filters.get("isUAH"),
+                            filters.get("isEUR"),
+                            filters.get("isUSD"),
+                            filters.get("isIN"),
+                            filters.get("isOUT"),
+                            filters.get("isCompleted"),
+                            filters.get("isScheduled"));
+        customerRepository.save(customer);
+    }
+
+    public Map<String, Boolean> translateFiltersToMap(List<String> filtersList){
+        Map<String, Boolean> filters = new HashMap<>();
+
+        filters.put("isUAH", filtersList.contains("UAH"));
+        filters.put("isEUR", filtersList.contains("EUR"));
+        filters.put("isUSD", filtersList.contains("USD"));
+        filters.put("isIN", filtersList.contains("IN"));
+        filters.put("isOUT", filtersList.contains("OUT"));
+        filters.put("isCompleted", filtersList.contains("Completed"));
+        filters.put("isScheduled", filtersList.contains("Scheduled"));
+
+        return filters;
     }
 
 }

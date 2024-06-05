@@ -13,13 +13,13 @@
             display: flex;
         }
          .column-left {
-            flex: 25%;
+            flex: 30%;
         }
         .column-center {
-            flex: 25%;
+            flex: 30%;
         }
         .column-right {
-            flex: 40%;
+            flex: 30%;
         }
         .column-small {
             flex: 5%;
@@ -34,6 +34,7 @@
             <label class="col-md-4 control-label"></label>
             <hr>
             <div class="col-md-8">
+                <a class="btn btn-primary" href="/accounting" role="button">Accounting</a>
                 <a class="btn btn-primary" href="/home" role="button">Home Page</a>
                 <a class="btn btn-primary" href="/login?logout" role="button">Sign Out</a>
             </div>
@@ -58,15 +59,15 @@
                         <h5>Customer updated...</h5>
                     </div>
                 </div>
-                <h3>Edit personal data</h3>
+                <h4>Edit personal data</h4>
 <!--                <b><td th:text="'Role: ' + ${roles.name()}">Role</td></b>   -->
                 <form class="form-horizontal" th:action="@{/settings}" method="POST">
                     <fieldset>
                         <div class="form-group">
-                            <div class="col-md-4">
-                                <input id="email" name="email" type="email" placeholder="E-mail" class="form-control input-md" required="" th:value="${email}">
-                                <input id="phone" name="phone" type="tel" pattern="[0-9]{9-13}" placeholder="Mobile phone" class="form-control input-md" th:value="${phone}">
-                                <input id="address" name="address" type="text" placeholder="Address" class="form-control input-md" th:value="${address}">
+                            <div class="mb-3">
+                                <input id="email" name="email" type="email" placeholder="E-mail" class="form-control" required="" th:value="${email}">
+                                <input id="phone" name="phone" type="tel" pattern="[0-9]{9-13}" placeholder="Mobile phone" class="form-control" th:value="${phone}">
+                                <input id="address" name="address" type="text" placeholder="Address" class="form-control" th:value="${address}">
                             </div>
                         </div>
 
@@ -82,7 +83,7 @@
         </div>
 
         <div class="column-center">
-            <h3>Edit Payment categories</h3>
+            <h4>Edit Payment categories</h4>
             <form action="#" th:action="@{/deleteCategory}" th:object="${paymentCategories}" method="post">
                 <table class="table table-striped" border="1" width="30%">
                     <th:block th:each="paymentCategory : ${paymentCategories}">
@@ -98,7 +99,7 @@
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-8">
-                        <a class="btn btn-primary" href="/addNewCategory" role="button">New Category</a>
+                        <a class="btn btn-primary" href="/addNewCategory" role="button">Add Category</a>
                         <button type="submit" id="delete_category" name="delete_category" class="btn btn-primary">Delete Categories</button>
                     </div>
                 </div>
@@ -108,7 +109,7 @@
 
         <div class="column-right">
 <!--      Edit Accounts      -->
-            <h3>Edit Accounts</h3>
+            <h4>Edit Accounts</h4>
             <form action="#" th:action="@{/deleteAccount}" th:object="${accounts}" method="post">
                 <table class="table table-striped" border="1" width="30%">
                     <th:block th:each="account : ${accounts}">
@@ -126,7 +127,7 @@
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-8">
-                        <a class="btn btn-primary" href="/addNewAccount" role="button">New Account</a>
+                        <a class="btn btn-primary" href="/addNewAccount" role="button">Add Account</a>
                         <button type="submit" id="delete_account" name="delete_account" class="btn btn-primary">Delete Accounts</button>
                     </div>
                 </div>

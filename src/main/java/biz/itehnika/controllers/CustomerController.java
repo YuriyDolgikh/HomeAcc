@@ -4,6 +4,7 @@ import biz.itehnika.config.AppConfig;
 import biz.itehnika.model.Customer;
 import biz.itehnika.model.enums.CustomerRole;
 import biz.itehnika.services.AccountService;
+import biz.itehnika.services.CurrencyService;
 import biz.itehnika.services.CustomerService;
 import biz.itehnika.services.PaymentCategoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,12 +28,14 @@ public class CustomerController {
     private final PasswordEncoder passwordEncoder;
     private final PaymentCategoryService paymentCategoryService;
     private final AccountService accountService;
+    private final CurrencyService currencyService;
 
-    public CustomerController(CustomerService customerService, PasswordEncoder passwordEncoder, PaymentCategoryService paymentCategoryService, AccountService accountService) {
+    public CustomerController(CustomerService customerService, PasswordEncoder passwordEncoder, PaymentCategoryService paymentCategoryService, AccountService accountService, CurrencyService currencyService) {
         this.customerService = customerService;
         this.passwordEncoder = passwordEncoder;
         this.paymentCategoryService = paymentCategoryService;
         this.accountService = accountService;
+        this.currencyService = currencyService;
     }
 
     @GetMapping("/home")
@@ -164,7 +167,7 @@ public class CustomerController {
     }
 
     @PostMapping(value = "/delete")     // TODO - ADMIN role required
-    @PreAuthorize("hasRole('ROLE_ADMIN')") // SpEL !!!
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteCustomers(@RequestParam(name = "toDelete", required = false) List<Long> ids, Model model) {
         if (ids != null && !ids.isEmpty()) {
             customerService.deleteCustomers(ids);
@@ -176,6 +179,7 @@ public class CustomerController {
 
     @GetMapping("/login")
     public String loginPage() {
+        currencyService.addTodayRatesIntoDB();  // TODO - Set rule to actualise exchange rates ( e.g.: every customer login || every one hour)
         return "login";
     }
 

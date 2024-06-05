@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Accounting</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet">
+
+          <style>
+            /* body {
+                font-family: Arial;
+                color: white;
+            } */
+            
+            .split {
+                height: 100%;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                overflow-x: hidden;
+                padding-top: 20px;
+            }
+            
+            .left {
+                left: 0;
+                width: 20%;
+            }
+
+            .center {
+                left: 20%;
+                width: 60%;
+            }
+            
+            .right {
+                right: 0;
+                width:20%;
+            }
+
+            </style>
+</head>
+<body>
+    <div class="split left">
+        <div class="centered">
+            <form class="form-horizontal">
+                <fieldset>
+                <!-- Buttons  -->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="delete_payment"></label>
+                  <div class="d-grid gap-2 col-6 mx-auto">
+                    <a class="btn btn-success" href="/addNewPayment" role="button">Add Payment</a>
+                    <button type="submit" form="delete_payment" name="delete_payment" class="btn btn-danger">Delete Payment</button>
+                    <button id="button4id" name="button4id" class="btn btn-primary">Currency Exchange</button>
+                    <button id="button5id" name="button5id" class="btn btn-primary">Transfer to Account</button>
+                    <a class="btn btn-primary" href="/settings" role="button">Settings</a>
+                    <a class="btn btn-primary" href="/home" role="button">Home Page</a>
+                  </div>
+                </div>
+                </fieldset>
+                </form>
+
+            <!-- Set period form  -->
+            <form class="form-horizontal" th:action="@{/setPeriod}" method="POST">
+
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <label for="startDate">Start date:</label>
+                    <input type="date" id="startDate" name="startDate" th:value="${startDate}"/>
+                    <label for="endDate">End date:</label>
+                    <input type="date" id="endDate" name="endDate" th:value="${endDate}"/>
+                    <button type="submit" class="btn btn-primary ">Set period</button>
+                </div>
+  
+            </form>
+
+            <!-- Set Filters  -->
+            <form class="form-horizontal" th:action="@{/setFilters}" th:object="${filters}" method="POST">
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <label>Currency:</label>
+                    <div class="form-check-inline">
+                        <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxUAH" value="UAH" th:checked="${filters.isUAH}"> UAH</td>
+                        <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxEUR" value="EUR" th:checked="${filters.isEUR}"> EUR</td>
+                        <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxUSD" value="USD" th:checked="${filters.isUSD}"> USD</td>
+                    </div>
+                    <label>Payment direction:</label>
+                    <div class="form-check-inline">
+                        <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxIN" value="IN" th:checked="${filters.isIN}"> IN</td>
+                        <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxOUT" value="OUT" th:checked="${filters.isOUT}"> OUT</td>
+                    </div>
+                    <label>Status:</label>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" name="newFilters" type="checkbox" id="checkboxCompleted" value="Completed" th:checked="${filters.isCompleted}"> Complete
+                    </div>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" name="newFilters" type="checkbox" id="checkboxScheduled" value="Scheduled" th:checked="${filters.isScheduled}"> Schedule
+                    </div>
+                    <button type="submit" class="btn btn-primary ">Set Filters</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+      
+    <div class="split center">
+        <div class="centered">
+
+            <!--      List / Edit Payments      -->
+            <form id="delete_payment" th:action="@{/deletePayment}" th:object="${payments}" method="post">
+                <table class="table table-striped" border="1">
+                    <tr>
+                        <td></td>
+                        <td>Date</td>
+                        <td>Account name</td>
+                        <td>Payment category</td>
+                        <td>Description</td>
+                        <td align="center">Direction</td>
+                        <td align="center">Status</td>
+                        <td align="center">Currency</td>
+                        <td align="center">Amount</td>
+                        <td></td>
+                    </tr>
+                    <th:block th:each="payment : ${payments}">
+                        <tr>
+                            <td><input type="checkbox"  name="toDelete" th:value="${payment.id}" th:id="'check_' + ${payment.id}"></td>
+                            <td th:text ="${#temporals.format(payment.dateTime, 'dd-MM-yyyy HH:mm')}">...</td>
+                            <td th:text ="${payment.account.name}">...</td>
+                            <td th:text ="${payment.paymentCategory.name}">...</td>
+                            <td th:text ="${payment.description}">...</td>
+                            <td align="center" th:text ="${payment.direction} ? 'IN' : 'OUT'">...</td>
+                            <td align="center" th:text ="${payment.status} ? 'Completed' : 'Scheduled'">...</td>
+                            <td align="center" th:text ="${payment.currencyName}">...</td>
+                            <td align="right" th:text ="${#numbers.formatDecimal(payment.amount, 0, 'COMMA', 2, 'POINT')}">...</td>
+                            <td> <a th:href="@{'/updatePayment/' + ${payment.id}}">Edit</a> </td>
+                        </tr>
+                    </th:block>
+                </table>
+
+            </form>
+        </div>
+      </div>
+
+    <div class="split right">
+        <div class="centered">
+            <form action="#" class="form-horizontal" th:action="@{/newAction}" th:object="${balance}" method="post">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label"></label>
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <tr>
+                                <td>Today: </td>
+<!--                                <td><td th:text ="${#temporals.format(balance.dateNow, 'dd-MM-yyyy HH:mm')}">...</td></td>-->
+                            </tr>
+                            <tr>
+                                <td><h4>Balance</h4></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>On screen sum EUR:</td>
+                                <td align="right" th:text ="${#numbers.formatDecimal(periodSumEUR, 0, 'COMMA', 2, 'POINT')}">...</td>
+                            </tr>
+
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+
+    <script crossorigin="anonymous"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+<!-- </div> -->
+</body>
+</html>

@@ -1,7 +1,10 @@
 package biz.itehnika.repos;
 
 import biz.itehnika.model.Customer;
+import biz.itehnika.model.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.time.LocalDate;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 //    @Query("SELECT u FROM Customer u where u.login = :login")

@@ -16,19 +16,20 @@ import java.util.List;
 @NoArgsConstructor
 public class Account {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
     private String description;
     private AccountType type;
+    @Enumerated(EnumType.STRING)
     private CurrencyName currencyName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", orphanRemoval = true)
     private List<Payment> payments = new ArrayList<>();
 
     public Account(String name, String description, AccountType type, CurrencyName currencyName, Customer customer) {
