@@ -14,6 +14,10 @@
                 font-family: Arial;
                 color: white;
             } */
+
+            /*body{ */
+            /*     font-size: 80%; */
+            /*}*/
             
             .split {
                 height: 100%;
@@ -22,7 +26,7 @@
                 top: 0;
                 overflow-x: auto;
                 overflow-y: auto;
-                padding-top: 20px;
+                padding-top: 10px;
             }
             
             .left {
@@ -32,14 +36,14 @@
 
             .center {
                 left: 20%;
-                width: 60%;
+                width: 80%;
             }
             
-            .right {
+            /* .right {
                 right: 0;
                 width:20%;
                 justify-self: center;
-            }
+            } */
 
             </style>
 </head>
@@ -52,7 +56,7 @@
                 <!-- Buttons  -->
                 <div class="form-group">
                   <label class="col-md-4 control-label" for="delete_payment"></label>
-                  <div class="d-grid gap-2 col-7 mx-auto">
+                  <div class="d-grid gap-1 col-9 mx-auto">
                     <a class="btn btn-success" href="/addNewPayment" role="button">Add Payment</a>
                     <button type="submit" form="delete_payment" name="delete_payment" class="btn btn-danger">Delete Payment</button>
                     <button id="button4id" name="button4id" class="btn btn-primary">Currency Exchange</button>
@@ -67,7 +71,7 @@
             <!-- Set period form  -->
             <form class="form-horizontal" th:action="@{/setPeriod}" method="POST">
 
-                <div class="d-grid gap-2 col-7 mx-auto">
+                <div class="d-grid gap-1 col-9 mx-auto">
                     <label for="startDate">Start date:</label>
                     <input type="date" id="startDate" name="startDate" th:value="${startDate}"/>
                     <label for="endDate">End date:</label>
@@ -79,34 +83,60 @@
 
             <!-- Set Filters  -->
             <form class="form-horizontal" th:action="@{/setFilters}" th:object="${filters}" method="POST">
-                <div class="d-grid gap-2 col-7 mx-auto">
+                <div class="d-grid gap-1 col-9 mx-auto">
                     <label>Currency:</label>
-                    <div class="form-check-inline">
+                    <div>
                         <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxUAH" value="UAH" th:checked="${filters.isUAH}">&nbspUAH</td>
                         <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxEUR" value="EUR" th:checked="${filters.isEUR}">&nbspEUR</td>
                         <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxUSD" value="USD" th:checked="${filters.isUSD}">&nbspUSD</td>
                     </div>
                     <label>Payment direction:</label>
-                    <div class="form-check-inline">
+                    <div>
                         <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxIN" value="IN" th:checked="${filters.isIN}"> IN</td>
                         <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxOUT" value="OUT" th:checked="${filters.isOUT}"> OUT</td>
                     </div>
                     <label>Status:</label>
-                    <div class="form-check-inline">
+                    <div>
                         <td><input class="form-check-input" name="newFilters" type="checkbox" id="checkboxCompleted" value="Completed" th:checked="${filters.isCompleted}"> Completed</td>
                     </div>
-                    <div class="form-check-inline">
-                        <input class="form-check-input" name="newFilters" type="checkbox" id="checkboxScheduled" value="Scheduled" th:checked="${filters.isScheduled}"> Schedule
+                    <div>
+                        <input class="form-check-input" name="newFilters" type="checkbox" id="checkboxScheduled" value="Scheduled" th:checked="${filters.isScheduled}"> Scheduled
                     </div>
                     <button type="submit" class="btn btn-primary ">Set Filters</button>
                 </div>
             </form>
 
+
+
         </div>
     </div>
-      
+
     <div class="split center">
-        <div class="centered d-grid gap-2 col-11 ">
+
+        <form class="form-horizontal" th:object="${statistic}">
+            <label class="col-md-2 control-label"></label>
+            <div class="d-grid gap-1 col-11">
+                <table class="table table-success"  border="2">
+                    <tr>
+                        <td><b>Total: </b></td>
+                        <td align="right">₴ </td><td align="left" th:text ="${#numbers.formatDecimal(statistic.totalSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td>€ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.totalSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td>$ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.totalSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td><b>On&nbspScreen: </b></td>
+                        <td>₴ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td>€ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.onScreenSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td>$ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td><b>Today: </b></td>
+                        <td>₴ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.dailySumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td>€ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.dailySumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td>$ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.dailySumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        
+                    </tr>
+                </table>
+            </div>
+        </form>
+
+        <div class="centered d-grid gap-1 col-11 ">
 
             <!--      List / Edit Payments      -->
             <form id="delete_payment" th:action="@{/deletePayment}" th:object="${payments}" method="post">
@@ -141,83 +171,11 @@
 
             </form>
         </div>
-      </div>
-
-    <div class="split right">
-        <div class="centered">
-            <form action="#" class="form-horizontal" th:action="@{/newAction}" th:object="${statistic}" method="post">
-                <fieldset>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label"></label>
-                        <div class="d-grid gap-2 col-8 mb-auto">
-                            <table class="table table-striped"  border="2">
-                                <tr>
-                                    <td align="center">UAH</td>
-                                    <td align="center">EUR</td>
-                                    <td align="center">USD</td>
-                                </tr>
-                                <tr>
-                                    <td align="center"></td>
-                                    <td align="center">Total</td>
-                                    <td align="center"></td>
-                                </tr>
-                                <tr>
-                                    <td align="center" th:text ="${#numbers.formatDecimal(statistic.totalSumUAH, 1, 'COMMA', 2, 'POINT')}">123458.90</td>
-                                    <td align="center" th:text ="${#numbers.formatDecimal(statistic.totalSumEUR, 1, 'COMMA', 2, 'POINT')}">123458.90</td>
-                                    <td align="center" th:text ="${#numbers.formatDecimal(statistic.totalSumUSD, 1, 'COMMA', 2, 'POINT')}">123458.90</td>
-                                </tr>
-                                <tr>
-                                    <td align="center"></td>
-                                    <td align="center">Selected&nbspperiod</td>
-                                    <td align="center"></td>
-                                </tr>
-                                <tr>
-                                    <td align="center" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUAH, 1, 'COMMA', 2, 'POINT')}">123458.90</td>
-                                    <td align="center" th:text ="${#numbers.formatDecimal(statistic.onScreenSumEUR, 1, 'COMMA', 2, 'POINT')}">123458.90</td>
-                                    <td align="center" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUSD, 1, 'COMMA', 2, 'POINT')}">123458.90</td>
-                                </tr>
-                                <tr>
-                                    <td align="center"></td>
-                                    <td align="center">Today</td>
-                                    <td align="center"></td>
-                                </tr>
-                                <tr>
-                                    <td align="center" th:text ="${#numbers.formatDecimal(statistic.dailySumUAH, 1, 'COMMA', 2, 'POINT')}">123458.90</td>
-                                    <td align="center" th:text ="${#numbers.formatDecimal(statistic.dailySumEUR, 1, 'COMMA', 2, 'POINT')}">123458.90</td>
-                                    <td align="center" th:text ="${#numbers.formatDecimal(statistic.dailySumUSD, 1, 'COMMA', 2, 'POINT')}">123458.90</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </fieldset> 
-            </form>
-        </div>
     </div>
 
-    <script>
-        window.addEventListener("resize", AutoScale); //Масштабируем страницу при растягивании окна
-
-AutoScale(); //Масштабируем страницу после загрузки
-
-function AutoScale()
-{
-    let width = window.innerWidth; //Ширина окна
-    //Если вы хотите проверять по размеру экрана, то вам нужно свойство window.screen.width
-
-    if(width > 1280)
-    {
-   	 ChangeScale("big");
-    }
-    else if(width <= 1280 && width > 720)
-    {
-   	 ChangeScale("normal");
-    }
-    else if(width < 720)
-    {
-   	 ChangeScale("small");
-    }
-}
-    </script>
+    <!-- <div class="split right centered">
+        
+    </div> -->
 
     <script crossorigin="anonymous"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
