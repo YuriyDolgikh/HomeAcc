@@ -25,8 +25,8 @@
             <div class="col-md-4">
                 <input id="login" name="login" type="text" placeholder="Username / login" class="form-control input-md" required="" th:value="${login}">
                 <input id="email" name="email" type="email" placeholder="E-mail" class="form-control input-md" required="" th:value="${email}">
-                <input id="password" name="password" type="password" placeholder="Password" class="form-control input-md" required="">
-<!--                <input id="password_check" name="password_check" type="password" placeholder="" class="form-control input-md" required="">-->
+                <input id="password" name="password" type="password" placeholder="Password" class="form-control input-md" required pattern=".{3,}">
+<!--                <input id="confirm_password" name="confirm_password" type="password" placeholder="Confirm password" class="form-control input-md" required oninput="validatePassword()">-->
                 <input id="phone" name="phone" type="text" placeholder="Mobile phone" class="form-control input-md" th:value="${phone}">
                 <input id="address" name="address" type="text" placeholder="Address" class="form-control input-md" th:value="${address}">
             </div>
@@ -35,7 +35,7 @@
         <div class="form-group">
             <label class="col-md-4 control-label" for="register"></label>
             <div class="col-md-8">
-                <button type="submit" id="register" name="register" class="btn btn-success">Create new User</button>
+                <button type="submit" id="register" name="submit" class="btn btn-success">Create new User</button>
             </div>
         </div>
         </fieldset>

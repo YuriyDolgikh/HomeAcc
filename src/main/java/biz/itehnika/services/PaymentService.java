@@ -1,6 +1,7 @@
 package biz.itehnika.services;
 
 import biz.itehnika.model.*;
+import biz.itehnika.model.Currency;
 import biz.itehnika.model.enums.CurrencyName;
 import biz.itehnika.repos.PaymentRepository;
 import org.springframework.stereotype.Service;
@@ -16,35 +17,35 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final CustomerService customerService;
+    private final CurrencyService currencyService;
 
-    public PaymentService(PaymentRepository paymentRepository, CustomerService customerService) {
+    public PaymentService(PaymentRepository paymentRepository, CustomerService customerService, CurrencyService currencyService) {
         this.paymentRepository = paymentRepository;
         this.customerService = customerService;
+        this.currencyService = currencyService;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Payment getById(Long id){
         return paymentRepository.findById(id).orElseThrow();
     }
 
-    @Transactional
-    public List<Payment> getAllPaymentsByCustomer(Customer customer){
-        return paymentRepository.findByCustomer(customer);
+    @Transactional(readOnly = true)
+    public List<Payment> getAllPaymentsByCustomerAndCurrencyName(Customer customer, CurrencyName currencyName){
+        return paymentRepository.findByCustomerAndCurrencyName(customer, currencyName);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Payment> getPaymentsByCustomerAndPeriod(Customer customer, LocalDate startDate, LocalDate endDate){
         return paymentRepository.findByCustomerAndDateTimeBetweenOrderByDateTime(customer,
                                               LocalDateTime.of(startDate, LocalTime.MIN),
                                               LocalDateTime.of(endDate, LocalTime.MAX));
     }
 
-    @Transactional
-    public List<Payment> getPaymentsByCustomerAndAllFilters(Customer customer,
-                                                            LocalDate startDate,
-                                                            LocalDate endDate
-                                                            ){
+    @Transactional(readOnly = true)
+    public List<Payment> getPaymentsByCustomerAndAllFilters(Customer customer){
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
+        Map<String, LocalDate> workPeriod = customerService.getWorkPeriod(customer.getId());
         List<CurrencyName> currencyNames = new ArrayList<>();
         List<Boolean> directions = new ArrayList<>();
         List<Boolean> statuses = new ArrayList<>();
@@ -55,6 +56,9 @@ public class PaymentService {
         if (filters.get("isOUT")) directions.add(false);
         if (filters.get("isCompleted")) statuses.add(true);
         if (filters.get("isScheduled")) statuses.add(false);
+        LocalDate startDate = workPeriod.get("startDate");
+        LocalDate endDate = workPeriod.get("endDate");
+
         return paymentRepository.findByCustomerAndCurrencyNameInAndDirectionInAndStatusInAndDateTimeBetweenOrderByDateTimeAsc(
                                                     customer,
                                                     currencyNames,
@@ -108,5 +112,85 @@ public class PaymentService {
         paymentToUpdate.setAccount(account);
         paymentRepository.save(paymentToUpdate);
     }
+
+    @Transactional(readOnly = true)
+    public Double getTotalSumByCurrency(Customer customer, CurrencyName currencyName){
+        Double totalSum = 0.0;
+        List<Payment> payments = getAllPaymentsByCustomerAndCurrencyName(customer, currencyName);
+        for (Payment payment : payments){
+            if (payment.getDirection()){
+                totalSum += payment.getAmount();
+            }else {
+                totalSum -= payment.getAmount();
+            }
+        }
+        return totalSum;
+    }
+    @Transactional(readOnly = true)
+    public Double getOnScreenSumByCurrency(Customer customer, CurrencyName currencyName){
+        Double onScreenSum = 0.0;
+        List<Payment> payments = getPaymentsByCustomerAndAllFilters(customer);
+        for (Payment payment : payments){
+            if (payment.getCurrencyName().equals(currencyName)){
+                if (payment.getDirection()){
+                    onScreenSum += payment.getAmount();
+                }else {
+                    onScreenSum -= payment.getAmount();
+                }
+            }
+        }
+        return onScreenSum;
+    }
+
+    @Transactional(readOnly = true)
+    public Double getDailySumByCurrency(Customer customer, CurrencyName currencyName){
+        Double dailySum = 0.0;
+        List<Payment> payments = getPaymentsByCustomerAndPeriod(customer, LocalDate.now(), LocalDate.now());
+        for (Payment payment : payments){
+            if (payment.getCurrencyName().equals(currencyName)){
+                if (payment.getDirection()){
+                    dailySum += payment.getAmount();
+                }else {
+                    dailySum -= payment.getAmount();
+                }
+            }
+
+        }
+        return dailySum;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Double> getStatistic(Customer customer){     // TODO make strings inline
+        Map<String, Double> statistic = new HashMap<>();
+
+        Double totalSumUAH = getTotalSumByCurrency(customer, CurrencyName.UAH);
+        Double totalSumEUR = getTotalSumByCurrency(customer, CurrencyName.EUR);
+        Double totalSumUSD = getTotalSumByCurrency(customer, CurrencyName.USD);
+        Double onScreenSumUAH = getOnScreenSumByCurrency(customer, CurrencyName.UAH);
+        Double onScreenSumEUR = getOnScreenSumByCurrency(customer, CurrencyName.EUR);
+        Double onScreenSumUSD = getOnScreenSumByCurrency(customer, CurrencyName.USD);
+        Double dailySumUAH = getDailySumByCurrency(customer, CurrencyName.UAH);
+        Double dailySumEUR = getDailySumByCurrency(customer, CurrencyName.EUR);
+        Double dailySumUSD = getDailySumByCurrency(customer, CurrencyName.USD);
+//        Currency currencyUAH = currencyService.getCurrencyByNameToday(CurrencyName.UAH);
+//        Currency currencyEUR = currencyService.getCurrencyByNameToday(CurrencyName.EUR);
+//        Currency currencyUSD = currencyService.getCurrencyByNameToday(CurrencyName.USD);
+
+        statistic.put("totalSumUAH", totalSumUAH);
+        statistic.put("totalSumEUR", totalSumEUR);
+        statistic.put("totalSumUSD", totalSumUSD);
+        statistic.put("onScreenSumUAH", onScreenSumUAH);
+        statistic.put("onScreenSumEUR", onScreenSumEUR);
+        statistic.put("onScreenSumUSD", onScreenSumUSD);
+        statistic.put("dailySumUAH", dailySumUAH);
+        statistic.put("dailySumEUR", dailySumEUR);
+        statistic.put("dailySumUSD", dailySumUSD);
+//        statistic.put("currencyUAH", currencyUAH);
+//        statistic.put("currencyEUR", currencyEUR);
+//        statistic.put("currencyUSD", currencyUSD);
+
+        return statistic;
+    }
+
 
 }

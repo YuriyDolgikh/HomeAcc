@@ -12,7 +12,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByCustomerOrderByDateTime(Customer customer);
     List<Payment> findByCustomerAndDateTimeBetweenOrderByDateTime(Customer customer, LocalDateTime startDate, LocalDateTime endDate);
-    List<Payment> findByCustomer(Customer customer);
+    List<Payment> findByCustomerAndCurrencyName(Customer customer, CurrencyName currencyName);
     List<Payment> findByCustomerAndCurrencyNameInAndDirectionInAndStatusInAndDateTimeBetweenOrderByDateTimeAsc(Customer customer,
                                                                                                                 List<CurrencyName> currencyNames,
                                                                                                                 List<Boolean> directions,

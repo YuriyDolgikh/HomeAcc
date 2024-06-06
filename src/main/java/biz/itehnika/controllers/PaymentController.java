@@ -44,12 +44,12 @@ public class PaymentController {
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
         customerService.setWorkPeriod(customer.getId(),LocalDate.parse(startDate), LocalDate.parse(endDate));
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
+        Map<String, Double> statistic = paymentService.getStatistic(customer);
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
         model.addAttribute("filters", filters);
-        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer,
-                LocalDate.parse(startDate),
-                LocalDate.parse(endDate)));
+        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
+        model.addAttribute("statistic", statistic);
         return "accounting";
     }
 
@@ -61,9 +61,9 @@ public class PaymentController {
         customerService.setFilter(customer.getId(), customerService.translateFiltersToMap(filtersList));
         Map<String, LocalDate> workPeriod = customerService.getWorkPeriod(customer.getId());
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
-        List<Payment> payments = paymentService.getPaymentsByCustomerAndAllFilters(customer,
-                workPeriod.get("startDate"),
-                workPeriod.get("endDate"));
+        List<Payment> payments = paymentService.getPaymentsByCustomerAndAllFilters(customer);
+        Map<String, Double> statistic = paymentService.getStatistic(customer);
+        model.addAttribute("statistic", statistic);
         model.addAttribute("startDate", workPeriod.get("startDate").format(dateFormatter));
         model.addAttribute("endDate", workPeriod.get("endDate").format(dateFormatter));
         model.addAttribute("payments", payments);
@@ -80,41 +80,13 @@ public class PaymentController {
 
         LocalDate startDate = workPeriod.get("startDate");
         LocalDate endDate = workPeriod.get("endDate");
-        List<Payment> payments = paymentService.getPaymentsByCustomerAndAllFilters(customer,
-                workPeriod.get("startDate"),
-                workPeriod.get("endDate"));
-        Double periodSumUAH = 0d;
-        Double periodSumEUR = 0d;
-        Double periodSumUSD = 0d;
-        for (Payment payment : payments){
-            if (payment.getCurrencyName().equals(CurrencyName.UAH)){
-                if (payment.getDirection()){
-                    periodSumUAH += payment.getAmount();
-                }else{
-                    periodSumUAH -= payment.getAmount();
-                }
-            }
-            if (payment.getCurrencyName().equals(CurrencyName.USD)){
-                if (payment.getDirection()){
-                    periodSumUSD += payment.getAmount();
-                }else{
-                    periodSumUSD -= payment.getAmount();
-                }
-            }
-            if (payment.getCurrencyName().equals(CurrencyName.EUR)){
-                if (payment.getDirection()){
-                    periodSumEUR += payment.getAmount();
-                }else{
-                    periodSumEUR -= payment.getAmount();
-                }
-            }
-        }
-
+        List<Payment> payments = paymentService.getPaymentsByCustomerAndAllFilters(customer);
+        Map<String, Double> statistic = paymentService.getStatistic(customer);
+        model.addAttribute("statistic", statistic);
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
         model.addAttribute("payments", payments);
         model.addAttribute("filters", filters);
-        model.addAttribute("periodSumEUR", periodSumEUR);
 
         return "accounting";
     }
@@ -123,15 +95,13 @@ public class PaymentController {
     public String addNewPayment(Model model) {
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
 
-        model.addAttribute("dateTime", LocalDateTime.now());
+        model.addAttribute("dateTime", LocalDateTime.now().format(dateTimeFormatter));
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
         model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(customer));
         Map<String, LocalDate> workPeriod = customerService.getWorkPeriod(customer.getId());
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
         model.addAttribute("filters", filters);
-        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer,
-                workPeriod.get("startDate"),
-                workPeriod.get("endDate")));
+        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
         return "addNewPayment";
     }
 
@@ -162,9 +132,7 @@ public class PaymentController {
         Map<String, LocalDate> workPeriod = customerService.getWorkPeriod(customer.getId());
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
 
-        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer,
-                workPeriod.get("startDate"),
-                workPeriod.get("endDate")));
+        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
         model.addAttribute("added", true);
         model.addAttribute("filters", filters);
 
@@ -183,9 +151,7 @@ public class PaymentController {
         model.addAttribute("filters", filters);
         model.addAttribute("startDate", workPeriod.get("startDate").format(dateFormatter));
         model.addAttribute("endDate", workPeriod.get("endDate").format(dateFormatter));
-        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer,
-                                                        workPeriod.get("startDate"),
-                                                        workPeriod.get("endDate")));
+        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
 
         return "redirect:/accounting";
     }
