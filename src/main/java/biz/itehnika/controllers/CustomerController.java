@@ -105,7 +105,7 @@ public class CustomerController {
         model.addAttribute("phone", customer.getPhone());
         model.addAttribute("address", customer.getAddress());
 
-        return "/updateForAdmin";
+        return "updateForAdmin";
     }
 
     @PostMapping(value = "/updateForAdmin")     // TODO - update any users from admin page
@@ -134,11 +134,11 @@ public class CustomerController {
             }
 
         }
-        return "/updateForAdmin";
+        return "updateForAdmin";
     }
 
     @PostMapping(value = "/register")
-    public String newUser(@RequestParam String login,
+    public String newCustomer(@RequestParam String login,
                           @RequestParam String password,
                           @RequestParam String email,
                           @RequestParam(required = false) String phone,

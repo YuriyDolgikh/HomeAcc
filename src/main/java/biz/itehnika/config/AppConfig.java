@@ -37,7 +37,6 @@ public class AppConfig {
                 paymentCategoryService.addPaymentCategory("CAR", "Spare parts, fuel, repairs", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("CHILDREN", "Schools, kindergartens, entertainment, toys", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("GIFT", "Something given or received as a gift", customerService.findByLogin(ADMIN_LOGIN));
-//                paymentCategoryService.addPaymentCategory("FREELANCE", "--------------", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("RESTAURANT", "Restaurants, cafes, bars...", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("ENTERTAINMENT", "Clubs, discos, parties", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("TRAVEL", "Hotels, tours...", customerService.findByLogin(ADMIN_LOGIN));
@@ -51,19 +50,9 @@ public class AppConfig {
                 paymentCategoryService.addPaymentCategory("HOBBY", "Everything for body and soul", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("OTHER", "Other income and expenses", customerService.findByLogin(ADMIN_LOGIN));
 
-
                 customerService.addCustomer("testUser",
                         encoder.encode("222"),
                         CustomerRole.USER, "user@example.com", "", "");
-
-//                currencyService.addTodayRatesIntoDB();  // TODO - Set rule to actualise exchange rates ( e.g.: every customer login)
-//                PaymentCategory category = paymentCategoryService.getByNameAndCustomer("DEFAULT", customerService.findByLogin("testUser"));
-//                accountService.addAccount("Test ACC", "Просто для теста", AccountType.CASH, CurrencyName.EUR, customerService.findByLogin("testUser"));
-//                Account account = accountService.getAccountByNameAndCustomer("Test ACC", customerService.findByLogin("testUser"));
-//                paymentService.addPayment(LocalDateTime.now(), false, true, 123.45, CurrencyName.EUR,
-//                        "Test transaction", category, account, customerService.findByLogin("testUser"));
-//                paymentService.getAllPaymentsByCustomer(customerService.findByLogin("testUser"));
-
             }
         };
     }
