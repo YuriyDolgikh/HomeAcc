@@ -18,11 +18,13 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final CustomerService customerService;
     private final CurrencyService currencyService;
+    private final PaymentCategoryService paymentCategoryService;
 
-    public PaymentService(PaymentRepository paymentRepository, CustomerService customerService, CurrencyService currencyService) {
+    public PaymentService(PaymentRepository paymentRepository, CustomerService customerService, CurrencyService currencyService, PaymentCategoryService paymentCategoryService) {
         this.paymentRepository = paymentRepository;
         this.customerService = customerService;
         this.currencyService = currencyService;
+        this.paymentCategoryService = paymentCategoryService;
     }
 
     @Transactional(readOnly = true)
@@ -111,6 +113,24 @@ public class PaymentService {
         paymentToUpdate.setPaymentCategory(paymentCategory);
         paymentToUpdate.setAccount(account);
         paymentRepository.save(paymentToUpdate);
+    }
+
+    @Transactional
+    public void currencyExchange(Account accountSrc, Account accountDst, Double sumSrc, Double sumDst,
+                                                                    LocalDateTime dateTime, Customer customer){
+        CurrencyName currencyNameSrc = accountSrc.getCurrencyName();
+        CurrencyName currencyNameDst = accountDst.getCurrencyName();
+        PaymentCategory paymentCategory = paymentCategoryService.getByNameAndCustomer("BANK", customer);
+        String descriptionSrc = "Exchange " + sumSrc + " " + currencyNameSrc + " --> "
+                                         + sumDst + " " + currencyNameDst
+                                         + " (account: '" + accountDst.getName() + "'";
+        String descriptionDst = "Exchange " + sumDst + " " + currencyNameDst + " <-- "
+                                         + sumSrc + " " + currencyNameSrc
+                                         + " (account: '" + accountSrc.getName() + "'";
+        Payment paymentSrc = new Payment(dateTime, false, true, sumSrc, currencyNameSrc,
+                                                            descriptionSrc, paymentCategory, accountSrc, customer);
+        Payment paymentDst = new Payment(dateTime, true, true, sumDst, currencyNameDst,
+                                                            descriptionDst, paymentCategory, accountDst, customer);
     }
 
     @Transactional(readOnly = true)

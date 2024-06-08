@@ -118,25 +118,26 @@
             <div class="d-grid gap-1 col-11">
                 <table class="table table-success"  border="2">
                     <tr>
-                        <td><b>Total: </b></td>
-                        <td align="right">₴ </td><td align="left" th:text ="${#numbers.formatDecimal(statistic.totalSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td>€ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.totalSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td>$ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.totalSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td><b>On&nbspScreen: </b></td>
-                        <td>₴ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td>€ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.onScreenSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td>$ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td><b>Today: </b></td>
-                        <td>₴ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.dailySumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td>€ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.dailySumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td>$ </td><td align="center" th:text ="${#numbers.formatDecimal(statistic.dailySumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right"><b>Total:</b></td>
+                        <td align="right">₴</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.totalSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">€</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.totalSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">$</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.totalSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right"><b>On&nbspScreen:</b></td>
+                        <td align="right">₴</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">€</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.onScreenSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">$</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right"><b>Today:</b></td>
+                        <td align="right">₴</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.dailySumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">€</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.dailySumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">$</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.dailySumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
                         
                     </tr>
                 </table>
             </div>
         </form>
 
-        <div class="centered d-grid gap-1 col-11 ">
+        <div class="centered d-grid gap-1 col-11 mx-a">
+            
 
             <!--      List / Edit Payments      -->
             <form id="delete_payment" th:action="@{/deletePayment}" th:object="${payments}" method="post">
@@ -155,7 +156,7 @@
                     </tr>
                     <th:block th:each="payment : ${payments}">
                         <tr>
-                            <td><input type="checkbox"  name="toDelete" th:value="${payment.id}" th:id="'check_' + ${payment.id}"></td>
+                            <td><input class="form-check-input" type="checkbox"  name="toDelete" th:value="${payment.id}" th:id="'check_' + ${payment.id}"></td>
                             <td th:text ="${#temporals.format(payment.dateTime, 'dd-MM-yyyy HH:mm')}">...</td>
                             <td th:text ="${payment.account.name}">...</td>
                             <td th:text ="${payment.paymentCategory.name}">...</td>
