@@ -18,9 +18,6 @@ public class AppConfig {
     @Bean
     public CommandLineRunner demo(final CustomerService customerService,
                                   final PaymentCategoryService paymentCategoryService,
-                                  final CurrencyService currencyService,
-                                  final PaymentService paymentService,
-                                  final AccountService accountService,
                                   final PasswordEncoder encoder) {
         return new CommandLineRunner() {
             @Override
@@ -48,6 +45,7 @@ public class AppConfig {
                 paymentCategoryService.addPaymentCategory("TRANSPORT", "Taxi and public transport costs", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("HOUSEHOLD", "Various household appliances, dishes", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("HOBBY", "Everything for body and soul", customerService.findByLogin(ADMIN_LOGIN));
+                paymentCategoryService.addPaymentCategory("EXCHANGE", "Exchange currency (don't delete!)", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("OTHER", "Other income and expenses", customerService.findByLogin(ADMIN_LOGIN));
 
                 customerService.addCustomer("testUser",

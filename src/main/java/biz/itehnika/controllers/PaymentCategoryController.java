@@ -100,7 +100,10 @@ public class PaymentCategoryController {
         }
         model.addAttribute("id", paymentCategory.getId());
 
-        return "updateCategory";
+        if (CustomerController.isAdmin(user)){
+            return "redirect:/admin";
+        }
+        return "redirect:/settings";
     }
 
 }

@@ -12,4 +12,5 @@ public interface CurrencyRepository extends JpaRepository<Currency, Long>  {
     Currency findCurrencyByNameAndDateRate(CurrencyName currencyName, LocalDate dateRate);
     List<Currency> findCurrenciesByDateRate(LocalDate dateRate);
 
+    Boolean existsByDateRate(LocalDate localDate);
 }

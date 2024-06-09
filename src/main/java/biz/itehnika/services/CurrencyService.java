@@ -23,6 +23,11 @@ public class CurrencyService {
     }
 
     @Transactional
+    public Boolean isRatesExistByDate(LocalDate localDate){
+        return currencyRepository.existsByDateRate(localDate);
+    }
+
+    @Transactional
     public void addTodayRatesIntoDB(){  //TODO - make this every time when customer do login
         LocalDate localDate = LocalDate.now();
         List<Currency> listTodayRates = currencyRepository.findCurrenciesByDateRate(localDate);

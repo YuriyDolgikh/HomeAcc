@@ -1,9 +1,6 @@
 package biz.itehnika.controllers;
 
-import biz.itehnika.model.Account;
-import biz.itehnika.model.Customer;
-import biz.itehnika.model.Payment;
-import biz.itehnika.model.PaymentCategory;
+import biz.itehnika.model.*;
 import biz.itehnika.model.enums.CurrencyName;
 import biz.itehnika.services.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -98,7 +95,6 @@ public class PaymentController {
         model.addAttribute("dateTime", LocalDateTime.now().format(dateTimeFormatter));
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
         model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(customer));
-        Map<String, LocalDate> workPeriod = customerService.getWorkPeriod(customer.getId());
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
         model.addAttribute("filters", filters);
         model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
@@ -129,7 +125,6 @@ public class PaymentController {
                                 paymentCategory,
                                 account,
                                 customer);
-        Map<String, LocalDate> workPeriod = customerService.getWorkPeriod(customer.getId());
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
 
         model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
@@ -215,6 +210,69 @@ public class PaymentController {
         model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(customer));
 
         return "updatePayment";
+    }
+
+    @GetMapping(value = "/currencyExchange")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String currencyExchange(Model model){
+        Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
+        model.addAttribute("dateTime", LocalDateTime.now().format(dateTimeFormatter));
+        model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
+        return "currencyExchange";
+    }
+
+    @PostMapping(value = "/currencyExchange")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String currencyExchange(@RequestParam String dateTime,
+                                   @RequestParam String srcAccountName,
+                                   @RequestParam String dstAccountName,
+                                   @RequestParam Double amount,
+                                   Model model) {
+
+        Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
+        Account accountSrc = accountService.getAccountByNameAndCustomer(srcAccountName, customer);
+        Account accountDst = accountService.getAccountByNameAndCustomer(dstAccountName, customer);
+        CurrencyName srcCurrencyName = accountSrc.getCurrencyName();
+        CurrencyName dstCurrencyName = accountDst.getCurrencyName();
+        LocalDate localDate = LocalDate.parse(dateTime.split("T")[0]);
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
+        model.addAttribute("dateTime", LocalDateTime.now().format(dateTimeFormatter));
+        model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
+
+        if (srcCurrencyName.equals(dstCurrencyName)){
+            model.addAttribute("statusMsg", "Accounts must have different currencies!");
+            return "currencyExchange";
+        }
+        if (!currencyService.isRatesExistByDate(localDate)){
+            model.addAttribute("statusMsg", "There are no exchange rates on this date!");
+            return "currencyExchange";
+        }
+        Double rate;
+        if (!srcCurrencyName.equals(CurrencyName.UAH)){
+            Currency srcCurrencyRates = currencyService.getCurrencyByNameAndDate(srcCurrencyName, localDate);
+            if (dstCurrencyName.equals(CurrencyName.UAH)){
+                rate = srcCurrencyRates.getBuyRate();
+            }else{
+                Currency dstCurrencyRates = currencyService.getCurrencyByNameAndDate(dstCurrencyName, localDate);
+                rate = srcCurrencyRates.getBuyRate() / dstCurrencyRates.getSaleRate();
+            }
+        }else{
+            Currency dstCurrencyRates = currencyService.getCurrencyByNameAndDate(dstCurrencyName, localDate);
+                rate = 1 / dstCurrencyRates.getSaleRate();
+        }
+
+        paymentService.currencyExchange(accountSrc, accountDst, amount, amount*rate, localDateTime, customer);
+
+// TODO the next
+
+        Map<String, LocalDate> workPeriod = customerService.getWorkPeriod(customer.getId());
+        Map<String, Boolean> filters = customerService.getFilters(customer.getId());
+
+        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
+        model.addAttribute("workPeriod", workPeriod);
+        model.addAttribute("filters", filters);
+
+        return "redirect:/accounting";
     }
 
 }

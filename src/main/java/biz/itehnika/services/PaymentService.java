@@ -1,7 +1,6 @@
 package biz.itehnika.services;
 
 import biz.itehnika.model.*;
-import biz.itehnika.model.Currency;
 import biz.itehnika.model.enums.CurrencyName;
 import biz.itehnika.repos.PaymentRepository;
 import org.springframework.stereotype.Service;
@@ -17,13 +16,11 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final CustomerService customerService;
-    private final CurrencyService currencyService;
     private final PaymentCategoryService paymentCategoryService;
 
-    public PaymentService(PaymentRepository paymentRepository, CustomerService customerService, CurrencyService currencyService, PaymentCategoryService paymentCategoryService) {
+    public PaymentService(PaymentRepository paymentRepository, CustomerService customerService, PaymentCategoryService paymentCategoryService) {
         this.paymentRepository = paymentRepository;
         this.customerService = customerService;
-        this.currencyService = currencyService;
         this.paymentCategoryService = paymentCategoryService;
     }
 
@@ -115,22 +112,24 @@ public class PaymentService {
         paymentRepository.save(paymentToUpdate);
     }
 
-    @Transactional
+    @Transactional      //TODO need to do sums round
     public void currencyExchange(Account accountSrc, Account accountDst, Double sumSrc, Double sumDst,
                                                                     LocalDateTime dateTime, Customer customer){
         CurrencyName currencyNameSrc = accountSrc.getCurrencyName();
         CurrencyName currencyNameDst = accountDst.getCurrencyName();
-        PaymentCategory paymentCategory = paymentCategoryService.getByNameAndCustomer("BANK", customer);
-        String descriptionSrc = "Exchange " + sumSrc + " " + currencyNameSrc + " --> "
-                                         + sumDst + " " + currencyNameDst
-                                         + " (account: '" + accountDst.getName() + "'";
-        String descriptionDst = "Exchange " + sumDst + " " + currencyNameDst + " <-- "
-                                         + sumSrc + " " + currencyNameSrc
-                                         + " (account: '" + accountSrc.getName() + "'";
-        Payment paymentSrc = new Payment(dateTime, false, true, sumSrc, currencyNameSrc,
-                                                            descriptionSrc, paymentCategory, accountSrc, customer);
-        Payment paymentDst = new Payment(dateTime, true, true, sumDst, currencyNameDst,
-                                                            descriptionDst, paymentCategory, accountDst, customer);
+        PaymentCategory paymentCategory = paymentCategoryService.getByNameAndCustomer("EXCHANGE", customer);
+        String descriptionSrc = "Exchange " + String.format("%.2f",sumSrc) + " " + currencyNameSrc + " --> "
+                                         + String.format("%.2f",sumDst) + " " + currencyNameDst
+                                         + " (account: '" + accountDst.getName() + "')";
+        String descriptionDst = "Exchange " + String.format("%.2f",sumDst) + " " + currencyNameDst + " <-- "
+                                         + String.format("%.2f",sumSrc) + " " + currencyNameSrc
+                                         + " (account: '" + accountSrc.getName() + "')";
+        Payment paymentSrc = new Payment(dateTime, false, true, sumSrc,
+                                                currencyNameSrc, descriptionSrc, paymentCategory, accountSrc, customer);
+        Payment paymentDst = new Payment(dateTime, true, true, sumDst,
+                                                currencyNameDst, descriptionDst, paymentCategory, accountDst, customer);
+        paymentRepository.save(paymentSrc);
+        paymentRepository.save(paymentDst);
     }
 
     @Transactional(readOnly = true)
