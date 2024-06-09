@@ -46,6 +46,7 @@ public class AppConfig {
                 paymentCategoryService.addPaymentCategory("HOUSEHOLD", "Various household appliances, dishes", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("HOBBY", "Everything for body and soul", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("EXCHANGE", "Exchange currency (don't delete!)", customerService.findByLogin(ADMIN_LOGIN));
+                paymentCategoryService.addPaymentCategory("TRANSFER", "Send money to my another account (don't delete!)", customerService.findByLogin(ADMIN_LOGIN));
                 paymentCategoryService.addPaymentCategory("OTHER", "Other income and expenses", customerService.findByLogin(ADMIN_LOGIN));
 
                 customerService.addCustomer("testUser",

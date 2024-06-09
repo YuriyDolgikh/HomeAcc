@@ -263,7 +263,48 @@ public class PaymentController {
 
         paymentService.currencyExchange(accountSrc, accountDst, amount, amount*rate, localDateTime, customer);
 
-// TODO the next
+        Map<String, LocalDate> workPeriod = customerService.getWorkPeriod(customer.getId());
+        Map<String, Boolean> filters = customerService.getFilters(customer.getId());
+
+        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
+        model.addAttribute("workPeriod", workPeriod);
+        model.addAttribute("filters", filters);
+
+        return "redirect:/accounting";
+    }
+
+    @GetMapping(value = "/transfer")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String transferBetweenOwnAccounts(Model model){
+        Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
+        model.addAttribute("dateTime", LocalDateTime.now().format(dateTimeFormatter));
+        model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
+        return "transfer";
+    }
+
+    @PostMapping(value = "/transfer")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String transferBetweenOwnAccounts(@RequestParam String dateTime,
+                                   @RequestParam String srcAccountName,
+                                   @RequestParam String dstAccountName,
+                                   @RequestParam Double amount,
+                                   Model model) {
+
+        Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
+        Account accountSrc = accountService.getAccountByNameAndCustomer(srcAccountName, customer);
+        Account accountDst = accountService.getAccountByNameAndCustomer(dstAccountName, customer);
+        CurrencyName srcCurrencyName = accountSrc.getCurrencyName();
+        CurrencyName dstCurrencyName = accountDst.getCurrencyName();
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
+        model.addAttribute("dateTime", LocalDateTime.now().format(dateTimeFormatter));
+        model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
+
+        if (!srcCurrencyName.equals(dstCurrencyName)){
+            model.addAttribute("statusMsg", "Accounts must have the same currencies!");
+            return "transfer";
+        }
+
+        paymentService.transferToOwnAccount(accountSrc, accountDst, amount, localDateTime, customer);
 
         Map<String, LocalDate> workPeriod = customerService.getWorkPeriod(customer.getId());
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());

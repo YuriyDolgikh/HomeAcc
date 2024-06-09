@@ -112,22 +112,35 @@ public class PaymentService {
         paymentRepository.save(paymentToUpdate);
     }
 
-    @Transactional      //TODO need to do sums round
+    @Transactional      //TODO need to do sums round ?
     public void currencyExchange(Account accountSrc, Account accountDst, Double sumSrc, Double sumDst,
                                                                     LocalDateTime dateTime, Customer customer){
         CurrencyName currencyNameSrc = accountSrc.getCurrencyName();
         CurrencyName currencyNameDst = accountDst.getCurrencyName();
         PaymentCategory paymentCategory = paymentCategoryService.getByNameAndCustomer("EXCHANGE", customer);
         String descriptionSrc = "Exchange " + String.format("%.2f",sumSrc) + " " + currencyNameSrc + " --> "
-                                         + String.format("%.2f",sumDst) + " " + currencyNameDst
-                                         + " (account: '" + accountDst.getName() + "')";
+                       + String.format("%.2f",sumDst) + " " + currencyNameDst + " (account: '" + accountDst.getName() + "')";
         String descriptionDst = "Exchange " + String.format("%.2f",sumDst) + " " + currencyNameDst + " <-- "
-                                         + String.format("%.2f",sumSrc) + " " + currencyNameSrc
-                                         + " (account: '" + accountSrc.getName() + "')";
+                       + String.format("%.2f",sumSrc) + " " + currencyNameSrc + " (account: '" + accountSrc.getName() + "')";
         Payment paymentSrc = new Payment(dateTime, false, true, sumSrc,
                                                 currencyNameSrc, descriptionSrc, paymentCategory, accountSrc, customer);
         Payment paymentDst = new Payment(dateTime, true, true, sumDst,
                                                 currencyNameDst, descriptionDst, paymentCategory, accountDst, customer);
+        paymentRepository.save(paymentSrc);
+        paymentRepository.save(paymentDst);
+    }
+
+    @Transactional      //TODO need to do sums round ?
+    public void transferToOwnAccount(Account accountSrc, Account accountDst, Double sum,
+                                 LocalDateTime dateTime, Customer customer){
+        CurrencyName currencyName = accountSrc.getCurrencyName();
+        PaymentCategory paymentCategory = paymentCategoryService.getByNameAndCustomer("TRANSFER", customer);
+        String descriptionSrc = "Send to account '" + accountDst.getName() + "'";
+        String descriptionDst = "Receive from account '" + accountSrc.getName() + "'";
+        Payment paymentSrc = new Payment(dateTime, false, true, sum,
+                currencyName, descriptionSrc, paymentCategory, accountSrc, customer);
+        Payment paymentDst = new Payment(dateTime, true, true, sum,
+                currencyName, descriptionDst, paymentCategory, accountDst, customer);
         paymentRepository.save(paymentSrc);
         paymentRepository.save(paymentDst);
     }
