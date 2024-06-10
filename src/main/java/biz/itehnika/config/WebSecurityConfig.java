@@ -7,8 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
+
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +32,8 @@ public class WebSecurityConfig {
                                           "/addNewPayment",
                                           "/accounting",
                                           "/addNewAccount").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers( "/register").permitAll()
+
+                        .requestMatchers( "/register", "/images/favicon.ico").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling((exept) -> exept
@@ -49,10 +50,10 @@ public class WebSecurityConfig {
                         .permitAll()
                 )
                 .logout((logout) -> logout
-                        .logoutUrl("/perform_logout")
-                        .deleteCookies("JSESSIONID", "XSRF-TOKEN", "remember-me")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
+                        .deleteCookies(AbstractRememberMeServices.SPRING_SECURITY_REMEMBER_ME_COOKIE_KEY)
+                        .logoutSuccessUrl("/Login")
                         .permitAll());
 
         return http.build();
