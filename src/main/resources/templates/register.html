@@ -16,6 +16,11 @@
             <h3>Customer with this Login or E-mail exist!</h3>
         </div>
     </div>
+    <div th:if="${difPass}">
+        <div class="alert alert-danger" role="alert">
+            <h3>The entered passwords don't match!</h3>
+        </div>
+    </div>
 
     <form class="form-horizontal" th:action="@{/register}" method="POST">
         <fieldset>
@@ -23,10 +28,10 @@
         <!--Input-->
         <div class="form-group">
             <div class="col-md-4">
-                <input id="login" name="login" type="text" placeholder="Username / login" class="form-control input-md" required="" th:value="${login}">
-                <input id="email" name="email" type="email" placeholder="E-mail" class="form-control input-md" required="" th:value="${email}">
+                <input id="login" name="login" type="text" placeholder="Username / login" class="form-control input-md" required th:value="${login}">
+                <input id="email" name="email" type="email" placeholder="E-mail" class="form-control input-md" required th:value="${email}">
                 <input id="password" name="password" type="password" placeholder="Password" class="form-control input-md" required pattern=".{3,}">
-<!--                <input id="confirm_password" name="confirm_password" type="password" placeholder="Confirm password" class="form-control input-md" required oninput="validatePassword()">-->
+                <input id="passwordConfirm" name="passwordConfirm" type="password" placeholder="Confirm password" class="form-control input-md" required pattern=".{3,}">
                 <input id="phone" name="phone" type="text" placeholder="Mobile phone" class="form-control input-md" th:value="${phone}">
                 <input id="address" name="address" type="text" placeholder="Address" class="form-control input-md" th:value="${address}">
             </div>

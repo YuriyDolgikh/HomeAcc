@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -296,7 +297,7 @@ public class PaymentController {
         CurrencyName srcCurrencyName = accountSrc.getCurrencyName();
         CurrencyName dstCurrencyName = accountDst.getCurrencyName();
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
-        model.addAttribute("dateTime", LocalDateTime.now().format(dateTimeFormatter));
+        model.addAttribute("dateTime", ZonedDateTime.now().format(dateTimeFormatter));
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
 
         if (!srcCurrencyName.equals(dstCurrencyName)){

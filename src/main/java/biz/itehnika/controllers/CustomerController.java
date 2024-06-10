@@ -140,16 +140,28 @@ public class CustomerController {
     @PostMapping(value = "/register")
     public String newCustomer(@RequestParam String login,
                           @RequestParam String password,
+                          @RequestParam String passwordConfirm,
                           @RequestParam String email,
                           @RequestParam(required = false) String phone,
                           @RequestParam(required = false) String address,
                           Model model) {
+        if (!password.equals(passwordConfirm)){
+            model.addAttribute("difPass", true);
+            model.addAttribute("login", login);
+            model.addAttribute("email", email);
+            model.addAttribute("phone", phone);
+            model.addAttribute("address", address);
+            return "register";
+        }
+
         String passHash = passwordEncoder.encode(password);
 
         if ( ! customerService.addCustomer(login, passHash, CustomerRole.USER, email, phone, address)) {
             model.addAttribute("exists", true);
             model.addAttribute("login", login);
             model.addAttribute("email", email);
+            model.addAttribute("phone", phone);
+            model.addAttribute("address", address);
             return "register";
         }
         model.addAttribute("registered", true);
