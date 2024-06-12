@@ -8,11 +8,9 @@ import biz.itehnika.repos.PaymentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CustomerService {
@@ -143,6 +141,11 @@ public class CustomerService {
         filters.put("isScheduled", filtersList.contains("Scheduled"));
 
         return filters;
+    }
+
+    public static String getCustomerDateTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return sdf.format(new Date(System.currentTimeMillis()));
     }
 
 }
