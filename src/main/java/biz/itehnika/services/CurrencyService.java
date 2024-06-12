@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +30,8 @@ public class CurrencyService {
 
     @Transactional
     public void addTodayRatesIntoDB(){  //TODO - make this every time when customer do login
-        LocalDate localDate = LocalDate.now();
+        ZoneId zoneId = ZoneId.of("Europe/Kyiv");
+        LocalDate localDate = LocalDate.now(zoneId);
         List<Currency> listTodayRates = currencyRepository.findCurrenciesByDateRate(localDate);
         if (!listTodayRates.isEmpty()){
             return;
@@ -48,7 +50,8 @@ public class CurrencyService {
 
     @Transactional
     public Currency getCurrencyByNameToday(CurrencyName currencyName){
-        return currencyRepository.findCurrencyByNameAndDateRate(currencyName, LocalDate.now());
+        ZoneId zoneId = ZoneId.of(System.getProperty("user.timezone"));
+        return currencyRepository.findCurrencyByNameAndDateRate(currencyName, LocalDate.now(zoneId));
     }
 
 

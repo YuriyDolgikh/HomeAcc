@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,11 +87,12 @@ public class CustomerService {
         Map<String, LocalDate> period = new HashMap<>();
         LocalDate startDate = customer.getStartDate();
         LocalDate endDate = customer.getEndDate();
+        ZoneId zoneId = ZoneId.of(System.getProperty("user.timezone"));
         if (startDate == null) {
-            startDate = LocalDate.now();
+            startDate = LocalDate.now(zoneId);
         }
         if (endDate == null) {
-            endDate = LocalDate.now();
+            endDate = LocalDate.now(zoneId);
         }
         period.put("startDate", startDate);
         period.put("endDate", endDate);
@@ -100,11 +102,12 @@ public class CustomerService {
     @Transactional
     public void setWorkPeriod(Long customerId, LocalDate startDate, LocalDate endDate){
         Customer customer = customerRepository.findById(customerId).orElseThrow();
+        ZoneId zoneId = ZoneId.of(System.getProperty("user.timezone"));
         if (startDate == null) {
-            startDate = LocalDate.now();
+            startDate = LocalDate.now(zoneId);
         }
         if (endDate == null) {
-            endDate = LocalDate.now();
+            endDate = LocalDate.now(zoneId);
         }
         customer.setStartDate(startDate);
         customer.setEndDate(endDate);
