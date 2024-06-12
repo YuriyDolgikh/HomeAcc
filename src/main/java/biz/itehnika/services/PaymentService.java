@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -178,8 +177,7 @@ public class PaymentService {
     @Transactional(readOnly = true)
     public Double getDailySumByCurrency(Customer customer, CurrencyName currencyName){
         Double dailySum = 0.0;
-        ZoneId zoneId = ZoneId.of(System.getProperty("user.timezone"));
-        List<Payment> payments = getPaymentsByCustomerAndPeriod(customer, LocalDate.now(zoneId), LocalDate.now(zoneId));
+        List<Payment> payments = getPaymentsByCustomerAndPeriod(customer, LocalDate.now(), LocalDate.now());
         for (Payment payment : payments){
             if (payment.getCurrencyName().equals(currencyName)){
                 if (payment.getDirection()){

@@ -53,7 +53,7 @@ public class WebSecurityConfig {
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
                         .deleteCookies(AbstractRememberMeServices.SPRING_SECURITY_REMEMBER_ME_COOKIE_KEY)
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/Login")
                         .permitAll());
 
         return http.build();
