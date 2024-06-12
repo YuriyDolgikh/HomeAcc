@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -97,6 +98,8 @@ public class PaymentController {
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
 
         model.addAttribute("dateTime", getCustomerDateTime());
+        ZoneId zoneId = ZoneId.of(System.getProperty("user.timezone"));
+        model.addAttribute("dateTime", LocalDateTime.now(zoneId).format(dateTimeFormatter));
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
         model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(customer));
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
@@ -221,6 +224,8 @@ public class PaymentController {
     public String currencyExchange(Model model){
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
         model.addAttribute("dateTime", getCustomerDateTime());
+        ZoneId zoneId = ZoneId.of(System.getProperty("user.timezone"));
+        model.addAttribute("dateTime", LocalDateTime.now(zoneId).format(dateTimeFormatter));
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
         return "currencyExchange";
     }
@@ -241,6 +246,8 @@ public class PaymentController {
         LocalDate localDate = LocalDate.parse(dateTime.split("T")[0]);
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
         model.addAttribute("dateTime", getCustomerDateTime());
+        ZoneId zoneId = ZoneId.of(System.getProperty("user.timezone"));
+        model.addAttribute("dateTime", LocalDateTime.now(zoneId).format(dateTimeFormatter));
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
 
         if (srcCurrencyName.equals(dstCurrencyName)){
@@ -282,6 +289,8 @@ public class PaymentController {
     public String transferBetweenOwnAccounts(Model model){
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
         model.addAttribute("dateTime", getCustomerDateTime());
+        ZoneId zoneId = ZoneId.of(System.getProperty("user.timezone"));
+        model.addAttribute("dateTime", LocalDateTime.now(zoneId).format(dateTimeFormatter));
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
         return "transfer";
     }

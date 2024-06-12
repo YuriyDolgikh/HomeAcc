@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Data
 @NoArgsConstructor
@@ -24,11 +25,12 @@ public class CurrencyDTO {
     }
 
     public static Currency fromDTO(CurrencyDTO currencyDTO){
+        ZoneId zoneId = ZoneId.of("Europe/Kyiv");
         return new Currency(CurrencyName.valueOf(currencyDTO.getCcy()),
                             CurrencyName.valueOf(currencyDTO.getBase_ccy()),
                             currencyDTO.getBuy(),
                             currencyDTO.getSale(),
-                            LocalDate.now()
+                            LocalDate.now(zoneId)
                            );
     }
 }
