@@ -102,6 +102,8 @@ public class PaymentController {
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
         model.addAttribute("filters", filters);
         model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
+        model.addAttribute("ballances", accountService.getAccountBallancesByCustomer(customer));
+
         return "addNewPayment";
     }
 
@@ -222,6 +224,8 @@ public class PaymentController {
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
         model.addAttribute("dateTime", getCustomerDateTime());
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
+        model.addAttribute("ballances", accountService.getAccountBallancesByCustomer(customer));
+
         return "currencyExchange";
     }
 
@@ -283,6 +287,8 @@ public class PaymentController {
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
         model.addAttribute("dateTime", getCustomerDateTime());
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
+        model.addAttribute("ballances", accountService.getAccountBallancesByCustomer(customer));
+
         return "transfer";
     }
 

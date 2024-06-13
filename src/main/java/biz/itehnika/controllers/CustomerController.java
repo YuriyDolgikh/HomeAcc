@@ -86,6 +86,8 @@ public class CustomerController {
         model.addAttribute("address", address);
         model.addAttribute("roles", customerService.findByLogin(login).getRole());
         model.addAttribute("admin", isAdmin(user));
+        model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(dbUser));
+        model.addAttribute("accounts", accountService.getAccountsByCustomer(dbUser));
 
         if ( ! customerService.updateCustomer(login, email, phone, address)) {
             model.addAttribute("exists", true);
@@ -196,8 +198,16 @@ public class CustomerController {
     }
 
     @GetMapping("/register")
-    public String register() {
-        return "register";
+    public String register(Model model) {
+        try {
+            User user = getCurrentUser();
+            if (user != null && isAdmin(user)){
+                model.addAttribute("admin", true);
+            }
+            return "register";
+        }catch (Exception e){
+            return "register";
+        }
     }
 
     @GetMapping("/admin")   // TODO - it must send all the data needed to edit into admin page

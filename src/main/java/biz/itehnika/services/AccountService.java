@@ -2,17 +2,14 @@ package biz.itehnika.services;
 
 import biz.itehnika.model.Account;
 import biz.itehnika.model.Customer;
-import biz.itehnika.model.PaymentCategory;
+import biz.itehnika.model.Payment;
 import biz.itehnika.model.enums.AccountType;
 import biz.itehnika.model.enums.CurrencyName;
 import biz.itehnika.repos.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AccountService {
@@ -40,6 +37,24 @@ public class AccountService {
     @Transactional
     public Account getAccountByNameAndCustomer(String name, Customer customer){
         return accountRepository.findByNameAndCustomer(name, customer);
+    }
+
+    @Transactional
+    public Map<Long, Double> getAccountBallancesByCustomer(Customer customer){
+        Map<Long, Double> ballances = new HashMap<>();
+        List<Account> accounts = getAccountsByCustomer(customer);
+        for(Account account : accounts){
+            Double sum = 0.0;
+            for (Payment payment : account.getPayments()){
+                if(payment.getDirection()){
+                    sum += payment.getAmount();
+                }else{
+                    sum -= payment.getAmount();
+                }
+            }
+            ballances.put(account.getId(), sum);
+        }
+        return ballances;
     }
 
     @Transactional

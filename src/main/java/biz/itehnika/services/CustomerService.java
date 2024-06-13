@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
@@ -112,8 +114,7 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public Map<String, Boolean> getFilters(Long customerId){
         Customer customer = customerRepository.findById(customerId).orElseThrow();
-        Map<String, Boolean> filters = customer.getFilters();
-        return filters;
+        return customer.getFilters();
     }
 
     @Transactional
@@ -144,7 +145,8 @@ public class CustomerService {
     }
 
     public static String getCustomerDateTime(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        ZoneId zoneId = ZoneId.of(System.getProperty("user.timezone"));
         return sdf.format(new Date(System.currentTimeMillis()));
     }
 

@@ -27,14 +27,18 @@
                     <select class="selectpicker form-control form-group" name="srcAccountName"  th:required="required">
                         <option value="">Select source account</option>
                         <div th:each="account: ${accounts}">
-                            <option th:value="${account.name}" th:text="${account.name+' ('+account.currencyName+') - '+account.description}"></option>
-                        </div>
+                            <option th:value="${account.name}" th:text="${account.name} + ' - (' +
+                            ${#numbers.formatDecimal(ballances.get(account.id) , 1, 2, 'POINT')} + ' ' +
+                            ${account.currencyName} + ') - '+ ${account.description}">
+                            </option>                        </div>
                     </select>
                     <select class="selectpicker form-control form-group" name="dstAccountName"  th:required="required">
                         <option value="">Select target account</option>
                         <div th:each="account: ${accounts}">
-                            <option th:value="${account.name}" th:text="${account.name+' ('+account.currencyName+') - '+account.description}"></option>
-                        </div>
+                            <option th:value="${account.name}" th:text="${account.name} + ' - (' +
+                            ${#numbers.formatDecimal(ballances.get(account.id) , 1, 2, 'POINT')} + ' ' +
+                            ${account.currencyName} + ') - '+ ${account.description}">
+                            </option>                        </div>
                     </select>
                     <input id="amount" name="amount" type="number" step="0.01" min="0" placeholder="0.00" class="form-control input-md">
                 </div>
@@ -52,8 +56,7 @@
     <div class="form-group">
         <label class="col-md-4 control-label"></label>
         <div class="col-md-8">
-            <button class="btn btn-primary" id="back" name="back" onclick="history.back()">Cancel</button>
-            <a class="btn btn-primary" href="/accounting" role="button">Accounting</a>
+            <a class="btn btn-primary" href="/accounting" role="button">Cancel</a>
         </div>
     </div>
 
