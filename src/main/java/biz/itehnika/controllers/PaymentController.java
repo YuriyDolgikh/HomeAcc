@@ -225,6 +225,8 @@ public class PaymentController {
         model.addAttribute("dateTime", getCustomerDateTime());
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
         model.addAttribute("balances", accountService.getAccountbalancesByCustomer(customer));
+        model.addAttribute("currencyRatesEUR", currencyService.getCurrencyByNameToday(CurrencyName.EUR));
+        model.addAttribute("currencyRatesUSD", currencyService.getCurrencyByNameToday(CurrencyName.USD));
 
         return "currencyExchange";
     }
@@ -246,6 +248,9 @@ public class PaymentController {
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
         model.addAttribute("dateTime", getCustomerDateTime());
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
+        model.addAttribute("balances", accountService.getAccountbalancesByCustomer(customer));
+        model.addAttribute("currencyRatesEUR", currencyService.getCurrencyByNameToday(CurrencyName.EUR));
+        model.addAttribute("currencyRatesUSD", currencyService.getCurrencyByNameToday(CurrencyName.USD));
 
         if (srcCurrencyName.equals(dstCurrencyName)){
             model.addAttribute("statusMsg", "Accounts must have different currencies!");
@@ -308,6 +313,7 @@ public class PaymentController {
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
         model.addAttribute("dateTime", ZonedDateTime.now().format(dateTimeFormatter));
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
+        model.addAttribute("balances", accountService.getAccountbalancesByCustomer(customer));
 
         if (!srcCurrencyName.equals(dstCurrencyName)){
             model.addAttribute("statusMsg", "Accounts must have the same currencies!");
