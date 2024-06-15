@@ -54,6 +54,39 @@ public class PaymentController {
         return "accounting";
     }
 
+    @GetMapping(value = "/setPeriodToday")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String setPeriodToday(Model model) {
+        Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
+        LocalDate now = LocalDate.now();
+        customerService.setWorkPeriod(customer.getId(),now, now);
+        Map<String, Boolean> filters = customerService.getFilters(customer.getId());
+        Map<String, Double> statistic = paymentService.getStatistic(customer);
+        model.addAttribute("startDate", now.format(dateFormatter));
+        model.addAttribute("endDate", now.format(dateFormatter));
+        model.addAttribute("filters", filters);
+        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
+        model.addAttribute("statistic", statistic);
+        return "accounting";
+    }
+
+    @GetMapping(value = "/setPeriodMonth")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String setPeriodMonth(Model model) {
+        Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
+        LocalDate startDate = LocalDate.now().withDayOfMonth(1);
+        LocalDate endDate = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+        customerService.setWorkPeriod(customer.getId(),startDate, endDate);
+        Map<String, Boolean> filters = customerService.getFilters(customer.getId());
+        Map<String, Double> statistic = paymentService.getStatistic(customer);
+        model.addAttribute("startDate", startDate.format(dateFormatter));
+        model.addAttribute("endDate", endDate.format(dateFormatter));
+        model.addAttribute("filters", filters);
+        model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
+        model.addAttribute("statistic", statistic);
+        return "accounting";
+    }
+
     @PostMapping(value = "/setFilters")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public String setFilters(@RequestParam(name = "newFilters", required = false) List<String> filtersList, Model model) {

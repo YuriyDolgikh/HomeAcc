@@ -71,15 +71,16 @@
 
             <!-- Set period form  -->
             <form class="form-horizontal" th:action="@{/setPeriod}" method="POST">
-
                 <div class="d-grid gap-1 col-9 mx-auto">
                     <label for="startDate">Start date:</label>
                     <input type="date" id="startDate" name="startDate" th:value="${startDate}"/>
                     <label for="endDate">End date:</label>
                     <input type="date" id="endDate" name="endDate" th:value="${endDate}"/>
-                    <button type="submit" class="btn btn-primary ">Set period</button>
+                    <button type="submit" class="btn btn-primary">Set period</button>
+                    <a class="btn btn-primary" href="/setPeriodToday" role="button">Set Today</a>
+                    <a class="btn btn-primary" href="/setPeriodMonth" role="button">Set This Month</a>
+
                 </div>
-  
             </form>
 
             <!-- Set Filters  -->
