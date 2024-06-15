@@ -40,8 +40,8 @@ public class AccountService {
     }
 
     @Transactional
-    public Map<Long, Double> getAccountBallancesByCustomer(Customer customer){
-        Map<Long, Double> ballances = new HashMap<>();
+    public Map<Long, Double> getAccountbalancesByCustomer(Customer customer){
+        Map<Long, Double> balances = new HashMap<>();
         List<Account> accounts = getAccountsByCustomer(customer);
         for(Account account : accounts){
             Double sum = 0.0;
@@ -52,9 +52,27 @@ public class AccountService {
                     sum -= payment.getAmount();
                 }
             }
-            ballances.put(account.getId(), sum);
+            balances.put(account.getId(), sum);
         }
-        return ballances;
+        return balances;
+    }
+
+    @Transactional
+    public Double getTotalByCurrencyNameAndCustomer(CurrencyName currencyName, Customer customer){
+        Double total = 0.0;
+        List<Account> accounts = getAccountsByCurrencyNameAndCustomer(currencyName, customer);
+        for(Account account : accounts){
+            Double sum = 0.0;
+            for (Payment payment : account.getPayments()){
+                if(payment.getDirection()){
+                    sum += payment.getAmount();
+                }else{
+                    sum -= payment.getAmount();
+                }
+            }
+            total += sum;
+        }
+        return total;
     }
 
     @Transactional

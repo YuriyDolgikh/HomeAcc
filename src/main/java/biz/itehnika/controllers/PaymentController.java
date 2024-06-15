@@ -96,13 +96,13 @@ public class PaymentController {
     public String addNewPayment(Model model) {
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
 
-        model.addAttribute("dateTime", getCustomerDateTime());
+//        model.addAttribute("dateTime", getCustomerDateTime());
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
         model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(customer));
         Map<String, Boolean> filters = customerService.getFilters(customer.getId());
         model.addAttribute("filters", filters);
         model.addAttribute("payments", paymentService.getPaymentsByCustomerAndAllFilters(customer));
-        model.addAttribute("ballances", accountService.getAccountBallancesByCustomer(customer));
+        model.addAttribute("balances", accountService.getAccountbalancesByCustomer(customer));
 
         return "addNewPayment";
     }
@@ -224,7 +224,7 @@ public class PaymentController {
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
         model.addAttribute("dateTime", getCustomerDateTime());
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
-        model.addAttribute("ballances", accountService.getAccountBallancesByCustomer(customer));
+        model.addAttribute("balances", accountService.getAccountbalancesByCustomer(customer));
 
         return "currencyExchange";
     }
@@ -287,7 +287,7 @@ public class PaymentController {
         Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
         model.addAttribute("dateTime", getCustomerDateTime());
         model.addAttribute("accounts", accountService.getAccountsByCustomer(customer));
-        model.addAttribute("ballances", accountService.getAccountBallancesByCustomer(customer));
+        model.addAttribute("balances", accountService.getAccountbalancesByCustomer(customer));
 
         return "transfer";
     }

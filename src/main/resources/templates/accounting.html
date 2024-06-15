@@ -61,6 +61,7 @@
                     <button type="submit" form="delete_payment" name="delete_payment" class="btn btn-danger">Delete Payment</button>
                     <a class="btn btn-primary" href="/currencyExchange" role="button">Currency Exchange</a>
                     <a class="btn btn-primary" href="/transfer" role="button">Transfer to Account</a>
+                    <a class="btn btn-primary" href="/accountsStatistic" role="button">Accounts Statistic</a>
                     <a class="btn btn-primary" href="/settings" role="button">Settings</a>
                     <a class="btn btn-primary" href="/home" role="button">Home Page</a>
                   </div>
@@ -119,17 +120,35 @@
                 <table class="table table-success"  border="2">
                     <tr>
                         <td align="right"><b>Total:</b></td>
-                        <td align="right">₴</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.totalSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">€</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.totalSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">$</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.totalSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">₴</td><td align="left"
+                                                    th:style="${statistic.totalSumUAH < 0 ? 'color : #dc3545' : 'color : #000'}"
+                                                    th:text ="${#numbers.formatDecimal(statistic.totalSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">€</td><td align="left"
+                                                    th:style="${statistic.totalSumEUR < 0 ? 'color : #dc3545' : 'color : #000'}"
+                                                    th:text ="${#numbers.formatDecimal(statistic.totalSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">$</td><td align="left"
+                                                    th:style="${statistic.totalSumUSD < 0 ? 'color : #dc3545' : 'color : #000'}"
+                                                    th:text ="${#numbers.formatDecimal(statistic.totalSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
                         <td align="right"><b>On&nbspScreen:</b></td>
-                        <td align="right">₴</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">€</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.onScreenSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">$</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.onScreenSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">₴</td><td align="left"
+                                                    th:style="${statistic.onScreenSumUAH < 0 ? 'color : #dc3545' : 'color : #000'}"
+                                                    th:text ="${#numbers.formatDecimal(statistic.onScreenSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">€</td><td align="left"
+                                                    th:style="${statistic.onScreenSumEUR < 0 ? 'color : #dc3545' : 'color : #000'}"
+                                                    th:text ="${#numbers.formatDecimal(statistic.onScreenSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">$</td><td align="left"
+                                                    th:style="${statistic.onScreenSumUSD < 0 ? 'color : #dc3545' : 'color : #000'}"
+                                                    th:text ="${#numbers.formatDecimal(statistic.onScreenSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
                         <td align="right"><b>Today:</b></td>
-                        <td align="right">₴</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.dailySumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">€</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.dailySumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">$</td><td align="left" th:text ="${#numbers.formatDecimal(statistic.dailySumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">₴</td><td align="left"
+                                                    th:style="${statistic.dailySumUAH < 0 ? 'color : #dc3545' : 'color : #000'}"
+                                                    th:text ="${#numbers.formatDecimal(statistic.dailySumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">€</td><td align="left"
+                                                    th:style="${statistic.dailySumEUR < 0 ? 'color : #dc3545' : 'color : #000'}"
+                                                    th:text ="${#numbers.formatDecimal(statistic.dailySumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
+                        <td align="right">$</td><td align="left"
+                                                    th:style="${statistic.dailySumUSD < 0 ? 'color : #dc3545' : 'color : #000'}"
+                                                    th:text ="${#numbers.formatDecimal(statistic.dailySumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
                         
                     </tr>
                 </table>

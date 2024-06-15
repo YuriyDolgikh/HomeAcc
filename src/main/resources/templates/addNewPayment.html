@@ -17,12 +17,12 @@
             <!--Input-->
             <div class="form-group">
                 <div class="col-md-4">
-                    <input id="dateTime" name="dateTime" type="datetime-local" class="form-control input-md" required="" th:value="${dateTime}">
+                    <input id="date" name="dateTime" type="datetime-local" class="form-control input-md" required >
                     <select class="selectpicker form-control form-group" name="accountName"  th:required="required">
                         <option value="">Select account</option>
                         <div th:each="account: ${accounts}">
                             <option th:value="${account.name}" th:text="${account.name} + ' - (' +
-                            ${#numbers.formatDecimal(ballances.get(account.id) , 1, 2, 'POINT')} + ' ' +
+                            ${#numbers.formatDecimal(balances.get(account.id) , 1, 2, 'POINT')} + ' ' +
                             ${account.currencyName} + ') - '+ ${account.description}">
                             </option>
                         </div>
@@ -68,16 +68,8 @@
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
+
 </div>
+
 </body>
 </html>
-
-
-<!--<option th:value="${account.name}" th:text="${account.name}" +-->
-<!--' - (' +-->
-<!--"${#numbers.formatDecimal(ballances.get(account.id) , 1, '', 2, 'POINT')}" +-->
-<!--' ('+-->
-<!--"${account.currencyName+-->
-<!--') - '+-->
-<!--account.description}">-->
-<!--</option>-->

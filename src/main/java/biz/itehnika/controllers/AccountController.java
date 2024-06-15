@@ -4,10 +4,7 @@ import biz.itehnika.model.Account;
 import biz.itehnika.model.Customer;
 import biz.itehnika.model.enums.AccountType;
 import biz.itehnika.model.enums.CurrencyName;
-import biz.itehnika.services.AccountService;
-import biz.itehnika.services.CurrencyService;
-import biz.itehnika.services.CustomerService;
-import biz.itehnika.services.PaymentCategoryService;
+import biz.itehnika.services.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -132,6 +129,23 @@ public class AccountController {
         model.addAttribute("id", id);
 
         return "updateAccount";
+    }
+
+    @GetMapping("/accountsStatistic")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    public String accountsStatistic(Model model){
+        User user = CustomerController.getCurrentUser();
+        Customer customer = customerService.findByLogin(user.getUsername());
+
+        model.addAttribute("accountsUAH", accountService.getAccountsByCurrencyNameAndCustomer(CurrencyName.UAH, customer));
+        model.addAttribute("accountsEUR", accountService.getAccountsByCurrencyNameAndCustomer(CurrencyName.EUR, customer));
+        model.addAttribute("accountsUSD", accountService.getAccountsByCurrencyNameAndCustomer(CurrencyName.USD, customer));
+        model.addAttribute("totalUAH", accountService.getTotalByCurrencyNameAndCustomer(CurrencyName.UAH, customer));
+        model.addAttribute("totalEUR", accountService.getTotalByCurrencyNameAndCustomer(CurrencyName.EUR, customer));
+        model.addAttribute("totalUSD", accountService.getTotalByCurrencyNameAndCustomer(CurrencyName.USD, customer));
+        model.addAttribute("balances", accountService.getAccountbalancesByCustomer(customer));
+
+        return "accountsStatistic";
     }
 
 }
