@@ -109,7 +109,6 @@ public class AccountController {
         User user = CustomerController.getCurrentUser();
         Customer customer = customerService.findByLogin(user.getUsername());
 
-
         if ( ! accountService.updateAccount(id, name, description, AccountType.valueOf(type), CurrencyName.valueOf(currencyName), customer)) {
             Account account = accountService.getById(id);
             model.addAttribute("exists", true);
@@ -117,18 +116,13 @@ public class AccountController {
             model.addAttribute("description", account.getDescription());
             model.addAttribute("type", account.getType());
             model.addAttribute("currencyName", account.getCurrencyName());
+            model.addAttribute("accountTypes", AccountType.values());
+            model.addAttribute("currencyNames", CurrencyName.values());
+            model.addAttribute("id", id);
+            return "updateAccount";
         }else {
-            model.addAttribute("updated", true);
-            model.addAttribute("name", name);
-            model.addAttribute("description", description);
-            model.addAttribute("type", type);
-            model.addAttribute("currencyName", currencyName);
+            return "redirect:/settings";
         }
-        model.addAttribute("accountTypes", AccountType.values());
-        model.addAttribute("currencyNames", CurrencyName.values());
-        model.addAttribute("id", id);
-
-        return "updateAccount";
     }
 
     @GetMapping("/accountsStatistic")

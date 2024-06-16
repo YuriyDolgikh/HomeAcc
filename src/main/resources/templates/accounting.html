@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+      xmlns:th="https://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -9,43 +8,27 @@
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet">
 
-          <style>
-            /* body {
-                font-family: Arial;
-                color: white;
-            } */
+    <style>
+        .split {
+            height: 100%;
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            overflow-x: auto;
+            overflow-y: auto;
+            padding-top: 10px;
+        }
 
-            /*body{ */
-            /*     font-size: 80%; */
-            /*}*/
-            
-            .split {
-                height: 100%;
-                position: absolute;
-                z-index: 1;
-                top: 0;
-                overflow-x: auto;
-                overflow-y: auto;
-                padding-top: 10px;
-            }
-            
-            .left {
-                left: 0;
-                width: 20%;
-            }
+        .left {
+            left: 0;
+            width: 15%;
+        }
 
-            .center {
-                left: 20%;
-                width: 80%;
-            }
-            
-            /* .right {
-                right: 0;
-                width:20%;
-                justify-self: center;
-            } */
-
-            </style>
+        .center {
+            left: 15%;
+            width: 85%;
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -72,10 +55,16 @@
             <!-- Set period form  -->
             <form class="form-horizontal" th:action="@{/setPeriod}" method="POST">
                 <div class="d-grid gap-1 col-9 mx-auto">
-                    <label for="startDate">Start date:</label>
-                    <input type="date" id="startDate" name="startDate" th:value="${startDate}"/>
-                    <label for="endDate">End date:</label>
-                    <input type="date" id="endDate" name="endDate" th:value="${endDate}"/>
+                    <label></label>
+                    <table>
+                        <tr>
+                            <td>Start&nbspdate:</td><td style="text-align: right"><input type="date" id="startDate" name="startDate" th:value="${startDate}"/></td>
+                        </tr>
+                        <tr>
+                            <td>End&nbspdate:</td><td style="text-align: right"><input type="date" id="endDate" name="endDate" th:value="${endDate}"/></td>
+                        </tr>
+                    </table>
+                    
                     <button type="submit" class="btn btn-primary">Set period</button>
                     <a class="btn btn-primary" href="/setPeriodToday" role="button">Set Today</a>
                     <a class="btn btn-primary" href="/setPeriodMonth" role="button">Set This Month</a>
@@ -120,46 +109,43 @@
             <div class="d-grid gap-1 col-11">
                 <table class="table table-success"  border="2">
                     <tr>
-                        <td align="right"><b>Total:</b></td>
-                        <td align="right">₴</td><td align="left"
+                        <td style="text-align: right"><b>Total:</b></td>
+                        <td style="text-align: right">₴</td><td style="text-align: left"
                                                     th:style="${statistic.totalSumUAH < 0 ? 'color : #dc3545' : 'color : #000'}"
                                                     th:text ="${#numbers.formatDecimal(statistic.totalSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">€</td><td align="left"
+                        <td style="text-align: right">€</td><td style="text-align: left"
                                                     th:style="${statistic.totalSumEUR < 0 ? 'color : #dc3545' : 'color : #000'}"
                                                     th:text ="${#numbers.formatDecimal(statistic.totalSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">$</td><td align="left"
+                        <td style="text-align: right">$</td><td style="text-align: left"
                                                     th:style="${statistic.totalSumUSD < 0 ? 'color : #dc3545' : 'color : #000'}"
                                                     th:text ="${#numbers.formatDecimal(statistic.totalSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right"><b>On&nbspScreen:</b></td>
-                        <td align="right">₴</td><td align="left"
+                        <td style="text-align: right"><b>On&nbspScreen:</b></td>
+                        <td style="text-align: right">₴</td><td style="text-align: left"
                                                     th:style="${statistic.onScreenSumUAH < 0 ? 'color : #dc3545' : 'color : #000'}"
                                                     th:text ="${#numbers.formatDecimal(statistic.onScreenSumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">€</td><td align="left"
+                        <td style="text-align: right">€</td><td style="text-align: left"
                                                     th:style="${statistic.onScreenSumEUR < 0 ? 'color : #dc3545' : 'color : #000'}"
                                                     th:text ="${#numbers.formatDecimal(statistic.onScreenSumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">$</td><td align="left"
+                        <td style="text-align: right">$</td><td style="text-align: left"
                                                     th:style="${statistic.onScreenSumUSD < 0 ? 'color : #dc3545' : 'color : #000'}"
                                                     th:text ="${#numbers.formatDecimal(statistic.onScreenSumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right"><b>Today:</b></td>
-                        <td align="right">₴</td><td align="left"
+                        <td style="text-align: right"><b>Today:</b></td>
+                        <td style="text-align: right">₴</td><td style="text-align: left"
                                                     th:style="${statistic.dailySumUAH < 0 ? 'color : #dc3545' : 'color : #000'}"
                                                     th:text ="${#numbers.formatDecimal(statistic.dailySumUAH, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">€</td><td align="left"
+                        <td style="text-align: right">€</td><td style="text-align: left"
                                                     th:style="${statistic.dailySumEUR < 0 ? 'color : #dc3545' : 'color : #000'}"
                                                     th:text ="${#numbers.formatDecimal(statistic.dailySumEUR, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        <td align="right">$</td><td align="left"
+                        <td style="text-align: right">$</td><td style="text-align: left"
                                                     th:style="${statistic.dailySumUSD < 0 ? 'color : #dc3545' : 'color : #000'}"
                                                     th:text ="${#numbers.formatDecimal(statistic.dailySumUSD, 1, 'COMMA', 2, 'POINT')}">456.12</td>
-                        
                     </tr>
                 </table>
             </div>
         </form>
 
         <div class="centered d-grid gap-1 col-11 mx-a">
-            
-
-            <!--      List / Edit Payments      -->
+              <!--      List / Edit Payments      -->
             <form id="delete_payment" th:action="@{/deletePayment}" th:object="${payments}" method="post">
                 <table class="table table-striped" border="1">
                     <tr>
@@ -168,10 +154,10 @@
                         <td><b>Account name</b></td>
                         <td><b>Payment category</b></td>
                         <td><b>Description</b></td>
-                        <td align="center"><b>Direction</b></td>
-                        <td align="center"><b>Status</b></td>
-                        <td align="center"><b>Currency</b></td>
-                        <td align="center"><b>Amount</b></td>
+                        <td style="text-align: center"><b>Direction</b></td>
+                        <td style="text-align: center"><b>Status</b></td>
+                        <td style="text-align: center"><b>Currency</b></td>
+                        <td style="text-align: center"><b>Amount</b></td>
                         <td></td>
                     </tr>
                     <th:block th:each="payment : ${payments}">
@@ -181,26 +167,22 @@
                             <td th:text ="${payment.account.name}">...</td>
                             <td th:text ="${payment.paymentCategory.name}">...</td>
                             <td th:text ="${payment.description}">...</td>
-                            <td align="center" th:text ="${payment.direction} ? 'IN' : 'OUT'">...</td>
-                            <td align="center" th:text ="${payment.status} ? 'Completed' : 'Scheduled'">...</td>
-                            <td align="center" th:text ="${payment.currencyName}">...</td>
-                            <td align="right" th:text ="${#numbers.formatDecimal(payment.amount, 0, 'COMMA', 2, 'POINT')}">...</td>
+                            <td style="text-align: center" th:text ="${payment.direction} ? 'IN' : 'OUT'">...</td>
+                            <td style="text-align: center" th:text ="${payment.status} ? 'Completed' : 'Scheduled'">...</td>
+                            <td style="text-align: center" th:text ="${payment.currencyName}">...</td>
+                            <td style="text-align: right" th:text ="${#numbers.formatDecimal(payment.amount, 0, 'COMMA', 2, 'POINT')}">...</td>
                             <td> <a th:href="@{'/updatePayment/' + ${payment.id}}">Edit</a> </td>
                         </tr>
                     </th:block>
                 </table>
-
             </form>
         </div>
     </div>
-
-    <!-- <div class="split right centered">...</div> -->
 
     <script crossorigin="anonymous"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
-<!-- </div> -->
 </div>
 </body>
 </html>

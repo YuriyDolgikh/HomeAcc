@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="https://www.thymeleaf.org">
+      xmlns:th="https://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -47,7 +47,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             text-align: center;
-            margin: 0 0 0px;
+            margin: 0 0 0;
         }
 
         .form-container .alert-danger{
@@ -57,7 +57,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             text-align: center;
-            margin: 0 0 0px;
+            margin: 0 0 0;
         }
 
         .form-container .form-horizontal .form-group{ margin: 0 0 25px 0; }
@@ -128,14 +128,12 @@
                 <h3 class="title">Home accounting</h3>
                 <form class="form-horizontal" method="post" th:action="@{/j_spring_security_check}">
                     <div class="form-group">
-                        <label>login</label>
                         <input class="form-control" id="j_login" name="j_login" type="text" placeholder="login">
                     </div>
                     <div class="form-group">
-                        <label>password</label>
                         <input class="form-control" id="j_password" name="j_password" type="password" placeholder="password">
                     </div>
-                    <button type="submit" class="btn btn-default">Login</button>
+                    <button type="submit" class="btn btn-default">Log in</button>
                 </form>
                 <br>
                 <form class="form-horizontal">
@@ -154,14 +152,6 @@
             </div>
         </div>
     </div>
-
-<!--    <script>-->
-<!--        var x = new Date();-->
-<!--        var currentTimeZoneOffsetInHours = x.getTimezoneOffset() / 60 * -1;-->
-<!--        const inputElement = document.querySelector('#offset');-->
-<!--        inputElement.value = currentTimeZoneOffsetInHours;-->
-
-<!--    </script>-->
 
     <script crossorigin="anonymous"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
