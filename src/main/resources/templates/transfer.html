@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -45,7 +45,7 @@
             text-transform: none;
             letter-spacing: 1px;
             text-align: center;
-            margin: 0 0 0px;
+            margin: 0 0 0;
         }
 
         .form-container .alert-danger {
@@ -55,7 +55,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             text-align: center;
-            margin: 0 0 0px;
+            margin: 0 0 0;
         }
 
         .form-container .form-horizontal .form-group {
@@ -127,13 +127,12 @@
 
         <div class="col-md-4 offset-md-4">
             <div class="form-container">
-                <!-- <div class="form-icon" ><img src="free-icon-save-money-3210072.png"></i></div> -->
                 <h3 class="title">Transfer money</h3>
 
                 <form class="form-horizontal " th:action="@{/transfer}" method="POST">
                     <div class="form-group">
-                        <input id="dateTime" name="dateTime" type="datetime-local" class="form-control input-margin" th:required="required"></p>
-                        <select class="selectpicker form-control form-group" name="srcAccountName"  th:required="required">
+                        <input id="dateTime" name="dateTime" type="datetime-local" class="form-control input-margin" th:required="required">
+                        <select class="selectpicker form-control input-margin" name="srcAccountName"  th:required="required">
                             <option value="">Select source account</option>
                             <div th:each="account: ${accounts}">
                                 <option th:value="${account.name}" th:text="${account.name} + ' - (' +
@@ -142,7 +141,7 @@
                                 </option>
                             </div>
                         </select>
-                        <select class="selectpicker form-control form-group" name="dstAccountName"  th:required="required">
+                        <select class="selectpicker form-control input-margin" name="dstAccountName"  th:required="required">
                             <option value="">Select target account</option>
                             <div th:each="account: ${accounts}">
                                 <option th:value="${account.name}" th:text="${account.name} + ' - (' +
@@ -151,7 +150,7 @@
                                 </option>
                             </div>
                         </select>
-                        <input id="amount" name="amount" type="number" step="0.01" min="0" placeholder="0.00" class="form-control">
+                        <input id="amount" name="amount" type="number" step="0.01" min="0" placeholder="0.00" class="form-control input-margin">
                     </div>
                     <button type="submit" class="btn btn-default">Transfer</button>
                 </form>

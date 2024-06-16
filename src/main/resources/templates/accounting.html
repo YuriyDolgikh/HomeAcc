@@ -154,10 +154,10 @@
                         <td><b>Account name</b></td>
                         <td><b>Payment category</b></td>
                         <td><b>Description</b></td>
-                        <td style="text-align: center"><b>Direction</b></td>
-                        <td style="text-align: center"><b>Status</b></td>
-                        <td style="text-align: center"><b>Currency</b></td>
-                        <td style="text-align: center"><b>Amount</b></td>
+                        <td style="text-align: -webkit-center"><b>Direction</b></td>
+                        <td style="text-align: -webkit-center"><b>Status</b></td>
+                        <td style="text-align: -webkit-center"><b>Currency</b></td>
+                        <td style="text-align: -webkit-center"><b>Amount</b></td>
                         <td></td>
                     </tr>
                     <th:block th:each="payment : ${payments}">
@@ -167,9 +167,9 @@
                             <td th:text ="${payment.account.name}">...</td>
                             <td th:text ="${payment.paymentCategory.name}">...</td>
                             <td th:text ="${payment.description}">...</td>
-                            <td style="text-align: center" th:text ="${payment.direction} ? 'IN' : 'OUT'">...</td>
-                            <td style="text-align: center" th:text ="${payment.status} ? 'Completed' : 'Scheduled'">...</td>
-                            <td style="text-align: center" th:text ="${payment.currencyName}">...</td>
+                            <td style="text-align: -webkit-center" th:text ="${payment.direction} ? 'IN' : 'OUT'">...</td>
+                            <td style="text-align: -webkit-center" th:text ="${payment.status} ? 'Completed' : 'Scheduled'">...</td>
+                            <td style="text-align: -webkit-center" th:text ="${payment.currencyName}">...</td>
                             <td style="text-align: right" th:text ="${#numbers.formatDecimal(payment.amount, 0, 'COMMA', 2, 'POINT')}">...</td>
                             <td> <a th:href="@{'/updatePayment/' + ${payment.id}}">Edit</a> </td>
                         </tr>

@@ -26,7 +26,7 @@
 </head>
 <body>
     <!--    Heder   -->
-    <div style="text-align: center" class="row">
+    <div style="text-align: -webkit-center" class="row">
         <div class="form-group">
             <label class="col-md-4 control-label"></label>
             <hr>
@@ -40,7 +40,7 @@
     </div>
 
 <!--    Main    -->
-    <div style="text-align: center" class="row">
+    <div style="text-align: -webkit-center" class="row">
 
         <div class="column-small"></div>
 
@@ -54,17 +54,17 @@
                     <tr>
                         <td><b>Account name</b></td>
                         <td><b>Description</b></td>
-                        <td style="text-align: center"><b>Account type</b></td>
-                        <td style="text-align: center"><b>Currency</b></td>
-                        <td style="text-align: right"><b>Balance</b></td>
+                        <td style="text-align: -webkit-center"><b>Account type</b></td>
+                        <td style="text-align: -webkit-center"><b>Currency</b></td>
+                        <td style="text-align: -webkit-right"><b>Balance</b></td>
                     </tr>
                     <th:block th:each="account : ${accountsUAH}">
                         <tr>
                             <td th:text ="${account.name}">...</td>
                             <td th:text ="${account.description}">...</td>
-                            <td style="text-align: center" th:text ="${account.type}">...</td>
-                            <td style="text-align: center" th:text ="${account.currencyName}">...</td>
-                            <td style="text-align: right"
+                            <td style="text-align: -webkit-center" th:text ="${account.type}">...</td>
+                            <td style="text-align: -webkit-center" th:text ="${account.currencyName}">...</td>
+                            <td align="right"
                                 th:style="${balances.get(account.id) < 0 ? 'color : #dc3545' : 'color : #000'}"
                                 th:text ="${#numbers.formatDecimal(balances.get(account.id) , 1, 2, 'POINT')}">...
                             </td>
@@ -72,8 +72,8 @@
                     </th:block>
                     <tr>
                         <td colspan="3"></td>
-                        <td style="text-align: right"><b>Total UAH</b></td>
-                        <td style="text-align: right" th:style="${'font-weight: bold'} + '; ' +
+                        <td align="right"><b>Total UAH</b></td>
+                        <td align="right" th:style="${'font-weight: bold'} + '; ' +
                                                     ${totalUAH < 0 ? 'color : #dc3545' : 'color : #000'}"
                             th:text="${#numbers.formatDecimal(totalUAH , 1, 2, 'POINT')}"></td>
                     </tr>
@@ -81,17 +81,17 @@
                     <tr>
                         <td><b>Account name</b></td>
                         <td><b>Description</b></td>
-                        <td style="text-align: center"><b>Account type</b></td>
-                        <td style="text-align: center"><b>Currency</b></td>
-                        <td style="text-align: right"><b>Balance</b></td>
+                        <td style="text-align: -webkit-center"><b>Account type</b></td>
+                        <td style="text-align: -webkit-center"><b>Currency</b></td>
+                        <td style="text-align: -webkit-right"><b>Balance</b></td>
                     </tr>
                     <th:block th:each="account : ${accountsEUR}">
                         <tr>
                             <td th:text ="${account.name}">...</td>
                             <td th:text ="${account.description}">...</td>
-                            <td style="text-align: center" th:text ="${account.type}">...</td>
-                            <td style="text-align: center" th:text ="${account.currencyName}">...</td>
-                            <td style="text-align: right"
+                            <td style="text-align: -webkit-center" th:text ="${account.type}">...</td>
+                            <td style="text-align: -webkit-center" th:text ="${account.currencyName}">...</td>
+                            <td align="right"
                                 th:style="${balances.get(account.id) < 0 ? 'color : #dc3545' : 'color : #000'}"
                                 th:text ="${#numbers.formatDecimal(balances.get(account.id) , 1, 2, 'POINT')}">...
                             </td>
@@ -99,8 +99,8 @@
                     </th:block>
                     <tr>
                         <td colspan="3"></td>
-                        <td style="text-align: right"><b>Total EUR</b></td>
-                        <td style="text-align: right" th:style="${'font-weight: bold'} + '; ' +
+                        <td align="right"><b>Total EUR</b></td>
+                        <td align="right" th:style="${'font-weight: bold'} + '; ' +
                                                     ${totalEUR < 0 ? 'color : #dc3545' : 'color : #000'}"
                             th:text="${#numbers.formatDecimal(totalEUR , 1, 2, 'POINT')}"></td>
                     </tr>
@@ -108,17 +108,17 @@
                     <tr>
                         <td><b>Account name</b></td>
                         <td><b>Description</b></td>
-                        <td style="text-align: center"><b>Account type</b></td>
-                        <td style="text-align: center"><b>Currency</b></td>
-                        <td style="text-align: right"><b>Balance</b></td>
+                        <td style="text-align: -webkit-center"><b>Account type</b></td>
+                        <td style="text-align: -webkit-center"><b>Currency</b></td>
+                        <td style="text-align: -webkit-right"><b>Balance</b></td>
                     </tr>
                     <th:block th:each="account : ${accountsUSD}">
                         <tr>
                             <td th:text ="${account.name}">...</td>
                             <td th:text ="${account.description}">...</td>
-                            <td style="text-align: center" th:text ="${account.type}">...</td>
-                            <td style="text-align: center" th:text ="${account.currencyName}">...</td>
-                            <td style="text-align: right"
+                            <td style="text-align: -webkit-center" th:text ="${account.type}">...</td>
+                            <td style="text-align: -webkit-center" th:text ="${account.currencyName}">...</td>
+                            <td align="right"
                                 th:style="${balances.get(account.id) < 0 ? 'color : #dc3545' : 'color : #000'}"
                                 th:text ="${#numbers.formatDecimal(balances.get(account.id) , 1, 2, 'POINT')}">...
                             </td>
@@ -126,8 +126,8 @@
                     </th:block>
                     <tr>
                         <td colspan="3"></td>
-                        <td style="text-align: right"><b>Total USD</b></td>
-                        <td style="text-align: right" th:style="${'font-weight: bold'} + '; ' +
+                        <td align="right"><b>Total USD</b></td>
+                        <td align="right" th:style="${'font-weight: bold'} + '; ' +
                                                     ${totalUSD < 0 ? 'color : #dc3545' : 'color : #000'}"
                             th:text="${#numbers.formatDecimal(totalUSD , 1, 2, 'POINT')}"></td>
                     </tr>
