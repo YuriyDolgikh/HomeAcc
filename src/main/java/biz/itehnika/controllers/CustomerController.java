@@ -50,8 +50,9 @@ public class CustomerController {
     }
 
 
-    @GetMapping("/settings")
-    public String updateCustomer(Model model) {
+    @GetMapping("/settingsMain")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String settingsMain(Model model) {
         User user = getCurrentUser();
 
         String login = user.getUsername();
@@ -63,15 +64,13 @@ public class CustomerController {
         model.addAttribute("email", dbUser.getEmail());
         model.addAttribute("phone", dbUser.getPhone());
         model.addAttribute("address", dbUser.getAddress());
-        model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(dbUser));
-        model.addAttribute("accounts", accountService.getAccountsByCustomer(dbUser));
 
-        return "settings";
+        return "settingsMain";
     }
 
-    @PostMapping(value = "/settings")
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')") // SpEL !!!
-    public String updateCustomer(@RequestParam(required = false) String email,
+    @PostMapping(value = "/settingsMain")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String settingsMain(@RequestParam(required = false) String email,
                          @RequestParam(required = false) String phone,
                          @RequestParam(required = false) String address,
                          Model model) {
@@ -86,8 +85,6 @@ public class CustomerController {
         model.addAttribute("address", address);
         model.addAttribute("roles", customerService.findByLogin(login).getRole());
         model.addAttribute("admin", isAdmin(user));
-        model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(dbUser));
-        model.addAttribute("accounts", accountService.getAccountsByCustomer(dbUser));
 
         if ( ! customerService.updateCustomer(login, email, phone, address)) {
             model.addAttribute("exists", true);
@@ -95,7 +92,44 @@ public class CustomerController {
             model.addAttribute("updated", true);
         }
         model.addAttribute("email", dbUser.getEmail());
-        return "settings";
+        return "settingsMain";
+    }
+
+    @GetMapping("/settingsAccount")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String settingsAccount(Model model) {
+        User user = getCurrentUser();
+
+        String login = user.getUsername();
+        Customer dbUser = customerService.findByLogin(login);
+
+        model.addAttribute("accounts", accountService.getAccountsByCustomer(dbUser));
+
+        return "settingsAccount";
+    }
+
+//    @PostMapping(value = "/settingsAccount")
+//    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+//    public String updatesettingsAccount(Model model) {
+//        User user = getCurrentUser();
+//
+//        String login = user.getUsername();
+//        Customer dbUser = customerService.findByLogin(login);
+//
+//        return "settingsAccount";
+//    }
+
+    @GetMapping("/settingsCategory")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public String settingsCategory(Model model) {
+        User user = getCurrentUser();
+
+        String login = user.getUsername();
+        Customer dbUser = customerService.findByLogin(login);
+
+        model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(dbUser));
+
+        return "settingsCategory";
     }
 
     @GetMapping(value = "/update/{login}")     // TODO - update any users from admin page

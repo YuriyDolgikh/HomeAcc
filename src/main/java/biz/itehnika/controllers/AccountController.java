@@ -61,7 +61,7 @@ public class AccountController {
         }
         model.addAttribute("registered", true);
 
-        return "redirect:/settings";
+        return "redirect:/settingsAccount";
     }
 
 
@@ -79,7 +79,7 @@ public class AccountController {
         if (CustomerController.isAdmin(user)){      // TODO probably no need redirect to /admin
             return "redirect:/admin";
         }
-        return "redirect:/settings";
+        return "redirect:/settingsAccount";
     }
 
     @GetMapping("/updateAccount/{id}")
@@ -99,7 +99,7 @@ public class AccountController {
     }
 
     @PostMapping(value = "/updateAccount")
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')") // SpEL !!!
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public String updateAccount(@RequestParam() Long id,
                                 @RequestParam String name,
                                 @RequestParam String description,
@@ -121,7 +121,7 @@ public class AccountController {
             model.addAttribute("id", id);
             return "updateAccount";
         }else {
-            return "redirect:/settings";
+            return "redirect:/settingsAccount";
         }
     }
 

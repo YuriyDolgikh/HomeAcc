@@ -29,6 +29,7 @@ public class PaymentCategoryController {
     }
 
     @PostMapping(value = "/addNewCategory")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public String addNewCategory(@RequestParam String name,
                                  @RequestParam String description,
                                  Model model) {
@@ -48,11 +49,11 @@ public class PaymentCategoryController {
         if (CustomerController.isAdmin(user)){
             return "redirect:/admin";
         }
-        return "redirect:/settings";
+        return "redirect:/settingsCategory";
     }
 
     @PostMapping(value = "/deleteCategory")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')") // SpEL !!!
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public String deleteCategory(@RequestParam(name = "toDelete", required = false) List<Long> ids, Model model) {
         if (ids != null && !ids.isEmpty()) {
             paymentCategoryService.deletePaymentCategories(ids);
@@ -64,7 +65,7 @@ public class PaymentCategoryController {
         if (CustomerController.isAdmin(user)){
             return "redirect:/admin";
         }
-        return "redirect:/settings";
+        return "redirect:/settingsCategory";
     }
 
     @GetMapping("/updateCategory/{id}")
@@ -80,7 +81,7 @@ public class PaymentCategoryController {
     }
 
     @PostMapping(value = "/updateCategory")
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')") // SpEL !!!
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public String updateCategory(@RequestParam() Long id,
                                  @RequestParam() String name,
                                  @RequestParam(required = false) String description,
@@ -103,7 +104,17 @@ public class PaymentCategoryController {
         if (CustomerController.isAdmin(user)){
             return "redirect:/admin";
         }
-        return "redirect:/settings";
+        return "redirect:/settingsCategory";
+    }
+
+    @GetMapping(value = "/initCategories")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    public String initCategories(Model model){
+        Customer customer = customerService.findByLogin(CustomerController.getCurrentUser().getUsername());
+        paymentCategoryService.initPaymentCategoriesForCustomer(customer);
+        model.addAttribute("paymentCategories", paymentCategoryService.getPaymentCategoriesByCustomer(customer));
+        model.addAttribute("updated", true);
+        return "settingsCategory";
     }
 
 }
